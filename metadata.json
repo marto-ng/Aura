@@ -1,0 +1,6 @@
+{
+  "name": "Aura",
+  "description": "Aplicación de clima minimalista e intuitiva basada en Open-Meteo, adaptativa y elegante.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

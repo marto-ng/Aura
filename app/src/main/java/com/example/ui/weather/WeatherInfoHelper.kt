@@ -1,0 +1,91 @@
+package com.example.ui.weather
+
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+
+object WeatherInfoHelper {
+
+    fun getWeatherDescription(code: Int): String {
+        return when (code) {
+            0 -> "Cielo Despejado"
+            1 -> "Principalmente Despejado"
+            2 -> "Parcialmente Nublado"
+            3 -> "Cubierto / Nublado"
+            45 -> "Niebla"
+            48 -> "Niebla Escarchada"
+            51 -> "Llovizna Ligera"
+            53 -> "Llovizna Moderada"
+            55 -> "Llovizna Intensa"
+            56 -> "Llovizna Helada Ligera"
+            57 -> "Llovizna Helada Densa"
+            61 -> "Lluvia Débil"
+            63 -> "Lluvia Moderada"
+            65 -> "Lluvia Fuerte"
+            66 -> "Lluvia Helada Ligera"
+            67 -> "Lluvia Helada Fuerte"
+            71 -> "Nevada Ligera"
+            73 -> "Nevada Moderada"
+            75 -> "Nevada Intensa"
+            77 -> "Granos de Nieve"
+            80 -> "Chubascos de Lluvia Débiles"
+            81 -> "Chubascos de Lluvia Moderados"
+            82 -> "Chubascos de Lluvia Violentos"
+            85 -> "Chubascos de Nieve Débiles"
+            86 -> "Chubascos de Nieve Fuertes"
+            95 -> "Tormenta Eléctrica"
+            96 -> "Tormenta con Granizo Ligero"
+            99 -> "Tormenta con Granizo Fuerte"
+            else -> "Condiciones Variables"
+        }
+    }
+
+    // Dynamic Atmospheric Background Gradient based on WMO code and Day/Night cycle
+    fun getWeatherGradient(code: Int, isDay: Boolean): Brush {
+        val colors = if (isDay) {
+            when (code) {
+                0, 1 -> listOf(Color(0xFF42A5F5), Color(0xFF90CAF9), Color(0xFFE3F2FD)) // Beautiful vibrant day sky
+                2, 3 -> listOf(Color(0xFF78909C), Color(0xFFB0BEC5), Color(0xFFECEFF1)) // Overcast misty day
+                45, 48 -> listOf(Color(0xFFB0BEC5), Color(0xFFCFD8DC), Color(0xFFECEFF1)) // Foggy slate
+                51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82 -> listOf(Color(0xFF37474F), Color(0xFF546E7A), Color(0xFF90A4AE)) // Rainy sky day
+                71, 73, 75, 77, 85, 86 -> listOf(Color(0xFFCFD8DC), Color(0xFFECEFF1), Color(0xFFF5F5F5)) // Snowy bright gray
+                95, 96, 99 -> listOf(Color(0xFF263238), Color(0xFF37474F), Color(0xFF78909C)) // Stormy dark blue/gray
+                else -> listOf(Color(0xFF42A5F5), Color(0xFF90CAF9), Color(0xFFE3F2FD))
+            }
+        } else {
+            // Night gradients
+            when (code) {
+                0, 1 -> listOf(Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF334155)) // Dark starry blue
+                2, 3 -> listOf(Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF475569)) // Dark cloudy blue
+                45, 48 -> listOf(Color(0xFF1E293B), Color(0xFF334155), Color(0xFF475569)) // Misty night, silver highlights
+                51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82 -> listOf(Color(0xFF0A0F1D), Color(0xFF111827), Color(0xFF1F2937)) // Rainy cold night
+                71, 73, 75, 77, 85, 86 -> listOf(Color(0xFF1E293B), Color(0xFF334155), Color(0xFF64748B)) // Snowy dim night 
+                95, 96, 99 -> listOf(Color(0xFF090D16), Color(0xFF111827), Color(0xFF374151)) // Heavy storm night
+                else -> listOf(Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF334155))
+            }
+        }
+        return Brush.verticalGradient(colors)
+    }
+
+    // Identify if there is an extreme alert
+    fun getExtremeAlerts(temp: Double, uvIndex: Double, windSpeed: Double, precipProb: Int, code: Int): List<String> {
+        val alerts = mutableListOf<String>()
+        if (temp >= 35.0) {
+            alerts.add("Calor Extremo: Temperatura superior a 35°C. Mantente hidratado y evita el sol directo.")
+        }
+        if (temp <= 0.0) {
+            alerts.add("Frío Extremo: Riesgo de heladas importantes. Abrigarse adecuadamente.")
+        }
+        if (uvIndex >= 7.0) {
+            alerts.add("UV Extremo (Índice $uvIndex): Radiación muy alta. Aplica protector solar FPS 50+.")
+        }
+        if (windSpeed >= 40.0) {
+            alerts.add("Vientos Fuertes ($windSpeed km/h): Alerta de ráfagas importantes. Precaución al aire libre.")
+        }
+        if (code in listOf(95, 96, 99)) {
+            alerts.add("Tormenta Eléctrica Detectada: Busca refugio seguro e interior, peligro de rayos.")
+        } else if (code in listOf(65, 82)) {
+            alerts.add("Precipitación Severa: Riesgo Screen por fuertes lluvias acumuladas.")
+        }
+        return alerts
+    }
+}

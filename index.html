@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura 🌤️ - Aplicación de Clima Inteligente y Adaptativa</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0B132B',
+                            darker: '#080C1E',
+                            purple: '#415A77',
+                            nebula: '#1B263B',
+                            teal: '#00F2FE',
+                            cyan: '#4FACFE',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-effect:hover {
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.4);
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="bg-brand-darker text-slate-100 font-sans leading-relaxed selection:bg-brand-teal selection:text-brand-darker overflow-x-hidden">
+
+    <!-- Header / Nav -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-brand-darker/80 border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="app/src/main/res/drawable/aura_solid_icon_1779563541367.png" alt="Icono de Aura" class="w-10 h-10 rounded-xl shadow-lg border border-slate-700">
+                <span class="text-xl font-extrabold tracking-wider gradient-text">AURA</span>
+            </div>
+            
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#inicio" class="hover:text-brand-teal transition-colors">Inicio</a>
+                <a href="#caracteristicas" class="hover:text-brand-teal transition-colors">Características</a>
+                <a href="#arquitectura" class="hover:text-brand-teal transition-colors">Arquitectura</a>
+                <a href="#descargar" class="hover:text-brand-teal transition-colors">Instalación</a>
+            </nav>
+            
+            <!-- Right Actions -->
+            <div class="flex items-center gap-4">
+                <a href="#descargar" class="hidden sm:inline-flex px-5 py-2.5 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-bold rounded-full text-sm hover:opacity-90 transition-opacity hover:shadow-lg hover:shadow-cyan-500/20">
+                    Instalar APK
+                </a>
+                
+                <!-- Hamburger Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-400 hover:text-brand-teal focus:outline-none" aria-label="Abrir menú">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="hamburger-icon" class="block" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-800 bg-brand-darker/95 backdrop-blur-lg px-4 pt-4 pb-6 space-y-3 transition-all duration-300">
+            <a href="#inicio" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Inicio</a>
+            <a href="#caracteristicas" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Características</a>
+            <a href="#aquitectura" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Arquitectura</a>
+            <a href="#descargar" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Instalación</a>
+            <div class="pt-2">
+                <a href="#descargar" class="block w-full text-center py-3 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-bold rounded-xl text-sm">
+                    Descargar APK
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative overflow-hidden pt-8 pb-20 sm:pt-12 sm:pb-24 lg:py-32">
+        <!-- Background glows -->
+        <div class="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] bg-brand-teal/10 rounded-full blur-[60px] sm:blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] bg-[#9b51e0]/10 rounded-full blur-[60px] sm:blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <!-- Text Column -->
+            <div class="lg:col-span-7 flex flex-col justify-center text-center lg:text-left">
+                <span class="inline-flex items-center gap-2 self-center lg:self-start px-3 py-1 rounded-full text-xs font-semibold bg-brand-teal/10 text-brand-teal border border-brand-teal/20 mb-6">
+                    ⚡ Completamente Renovado & Adaptativo
+                </span>
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+                    El Clima en Armonía con <span class="gradient-text">tu Ritmo</span>
+                </h1>
+                <p class="text-base sm:text-lg text-slate-300 mb-8 max-w-xl mx-auto lg:mx-0">
+                    Aura es una app de clima de última generación para Android. Minimalista, intuitiva y consciente del tiempo real. Experimenta cómo su diseño cambia de forma fluida adaptándose al ciclo solar del lugar donde estés.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#descargar" class="px-8 py-4 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-extrabold rounded-2xl shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-3 hover:translate-y-[-2px] transition-all text-sm sm:text-base">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                        Descargar APK Oficial
+                    </a>
+                    <a href="#caracteristicas" class="px-8 py-4 bg-slate-800/60 hover:bg-slate-800 text-slate-100 font-bold rounded-2xl border border-slate-700/60 flex items-center justify-center gap-2 transition-all text-sm sm:text-base">
+                        Explorar Funciones
+                    </a>
+                </div>
+            </div>
+
+            <!-- Device Column / Preview Image -->
+            <div class="lg:col-span-5 flex justify-center mt-6 lg:mt-0">
+                <div class="relative w-full max-w-[280px] sm:max-w-[320px] rounded-[48px] bg-slate-900 p-3 shadow-2xl border-4 border-slate-700/80 group">
+                    <!-- Dynamic Phone Screen Inner -->
+                    <div class="overflow-hidden rounded-[38px] aspect-[9/19] bg-brand-dark border-4 border-slate-950">
+                        <img src="app/src/main/res/drawable/aura_app_mockup_1779811012969.png" alt="Captura de Pantalla Aura App" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <!-- Camera Punch Hole Mockup -->
+                    <div class="absolute top-6 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-slate-950 rounded-full border border-slate-800"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Características -->
+    <section id="caracteristicas" class="py-20 sm:py-24 bg-brand-nebula/40 border-y border-slate-800/60 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">
+                    La Fusión de <span class="gradient-text">Ingeniería y Diseño</span>
+                </h2>
+                <p class="text-slate-400 text-sm sm:text-base">
+                    Aura reimagina la forma en la que consultas el pronóstico, integrando una arquitectura robusta fuera de línea con el diseño interactivo más moderno.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <!-- Tarjeta 1: GPS y Autoubicación -->
+                <div class="p-6 sm:p-8 bg-slate-900/60 rounded-3xl border border-slate-800/80 hover:border-brand-teal/50 transition-all glow-effect flex flex-col">
+                    <div class="w-12 h-12 rounded-2xl bg-brand-teal/10 flex items-center justify-center text-brand-teal mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold mb-3">📍 Geoubicación GPS Integrada</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm flex-grow">
+                        Accede al clima de tu entorno de inmediato mediante el GPS integrado por el cliente. Traduce las coordenadas exactas de latitud y longitud en calles y ciudades reales mediante Reverse Geocoding.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 2: Hora Local Proporcionada -->
+                <div class="p-6 sm:p-8 bg-slate-900/60 rounded-3xl border border-slate-800/80 hover:border-brand-teal/50 transition-all glow-effect flex flex-col">
+                    <div class="w-12 h-12 rounded-2xl bg-violet-500/10 flex items-center justify-center text-violet-400 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold mb-3">🕒 Sincronización Horaria</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm flex-grow">
+                        Información cronológica de alta claridad. Lee un reloj dinámico estilizado en el dashboard que representa con exactitud tu hora local actual, actualizándose cada minuto en segundo plano.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 3: Ciclo Día/Noche -->
+                <div class="p-6 sm:p-8 bg-slate-900/60 rounded-3xl border border-slate-800/80 hover:border-brand-teal/50 transition-all glow-effect flex flex-col">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold mb-3">🌓 Adaptación Solar</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm flex-grow">
+                        La atmósfera es interactiva. Al anochecer o tras la caída de la noche, las ilustraciones dinámicas e iconos planos cambian de un sol templado a una luna detallada acompañada de constelaciones titilantes.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 4: Predicción 24h Real -->
+                <div class="p-6 sm:p-8 bg-slate-900/60 rounded-3xl border border-slate-800/80 hover:border-brand-teal/50 transition-all glow-effect flex flex-col">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold mb-3">📅 Pronósticos Precisos</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm flex-grow">
+                        Sin datos históricos redundantes ni espacios vacíos. El scroll horizontal de pronóstico para las próximas 24 horas se inicia exactamente en tiempo real, justo a partir de la hora que consulta el usuario.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 5: Búsqueda Global -->
+                <div class="p-6 sm:p-8 bg-slate-900/60 rounded-3xl border border-slate-800/80 hover:border-brand-teal/50 transition-all glow-effect flex flex-col">
+                    <div class="w-12 h-12 rounded-2xl bg-pink-500/10 flex items-center justify-center text-pink-400 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold mb-3">🔍 Autocompletado Espacial</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm flex-grow">
+                        Busca en cualquier latitud. Al ingresar más de 3 letras, Aura consulta una base de datos geocodificada global para sugerir coincidencias inteligentes de ciudades, provincias y países asociados.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 6: Room Db y Offline Cache -->
+                <div class="p-6 sm:p-8 bg-slate-900/60 rounded-3xl border border-slate-800/80 hover:border-brand-teal/50 transition-all glow-effect flex flex-col">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7m-16 0c0-2 1.5-3 3.5-3h9c2 0 3.5 1 3.5 3m-16 0h16M4 12h16m-16 5h16"/></svg>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-bold mb-3">💾 Persistencia Local</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm flex-grow">
+                        Diseñado para la resiliencia. Administra tus ciudades predilectas agregándolas con un simple botón de estrella en su ficha. Se guardarán en frío usando Room SQLite para cargarse sin red.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Arquitectura / Detallado -->
+    <section id="arquitectura" class="py-20 sm:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-6">
+                    <span class="text-brand-teal text-sm font-bold tracking-wider uppercase">Arquitectura Limpia</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mt-2 mb-6">La Calidad bajo el Capó</h2>
+                    <p class="text-slate-300 text-sm sm:text-base mb-6">
+                        La ingeniería del software de Aura está alineada con las mejores prácticas modernas para garantizar que el aplicativo escale de forma limpia, robusta y testeable:
+                    </p>
+
+                    <!-- Lista con iconos -->
+                    <ul class="space-y-4">
+                        <li class="flex gap-3">
+                            <span class="w-6 h-6 rounded-full bg-brand-cyan/20 text-brand-teal flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
+                            <div>
+                                <h4 class="font-bold text-sm sm:text-base">MVVM & StateFlow reactivo</h4>
+                                <p class="text-slate-400 text-xs sm:text-sm">Organización estructurada donde los datos fluyen reactivamente sin fugas de memoria o acoplamientos rígidos.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="w-6 h-6 rounded-full bg-brand-cyan/20 text-brand-teal flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
+                            <div>
+                                <h4 class="font-bold text-sm sm:text-base">Consumo Seguro de API local</h4>
+                                <p class="text-slate-400 text-xs sm:text-sm">Llamadas HTTP no bloqueantes por Corutinas usando Retrofit, convertidas mediante Moshi de forma tipada.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="w-6 h-6 rounded-full bg-brand-cyan/20 text-brand-teal flex items-center justify-center shrink-0 text-xs font-bold">✓</span>
+                            <div>
+                                <h4 class="font-bold text-sm sm:text-base">Edge-to-Edge y M3 Dinámico</h4>
+                                <p class="text-slate-400 text-xs sm:text-sm">Respeto milimétrico de la barra de estado y navegaciones del sistema, integrando colores puros de Material 3.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Arquitectura Code Visualization -->
+                <div class="lg:col-span-6 bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-8 relative">
+                    <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-4">
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="text-[10px] sm:text-xs font-mono text-slate-500">AuraArchitectureTree.kt</span>
+                    </div>
+                    <pre class="font-mono text-[10px] sm:text-xs text-slate-400 overflow-x-auto whitespace-pre-wrap sm:whitespace-pre">
+<span class="text-cyan-400">package</span> com.example
+
+<span class="text-slate-500">// Arquitectura del Proyecto</span>
+com.example
+├── MainActivity.kt         <span class="text-slate-500">// Entry Point (Compose Engine)</span>
+├── data
+│   ├── api
+│   │   ├── GeocodingResponse.kt
+│   │   └── WeatherApiService.kt <span class="text-slate-500">// Retrofit REST Setup</span>
+│   ├── db
+│   │   ├── ClimaDatabase.kt     <span class="text-slate-550">// Room Database</span>
+│   │   └── LocationDao.kt       <span class="text-slate-500">// Queries SQL</span>
+│   └── repository
+│       └── WeatherRepository.kt <span class="text-slate-500">// Single Source of Truth</span>
+└── ui
+    ├── theme
+    │   └── Theme.kt             <span class="text-slate-500">// Gradientes M3</span>
+    └── weather
+        ├── WeatherDashboardScreen.kt <span class="text-slate-500">// UI declarativa</span>
+        └── WeatherViewModel.kt  <span class="text-slate-500">// Modelo de Estado</span></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Descargas -->
+    <section id="descargar" class="py-20 sm:py-24 bg-gradient-to-b from-brand-darker to-brand-dark/20 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-brand-teal/10 border border-brand-teal/20 flex items-center justify-center mx-auto mb-8 shadow-xl">
+                <img src="app/src/main/res/drawable/aura_solid_icon_1779563541367.png" alt="Aura Logo" class="w-10 h-10 sm:w-14 sm:h-14 rounded-2xl">
+            </div>
+            
+            <h2 class="text-3xl sm:text-5xl font-extrabold mb-6">Pruébala en tu Dispositivo</h2>
+            <p class="text-slate-300 text-sm sm:text-lg mb-8 max-w-2xl mx-auto">
+                Para compilar y testear Aura de forma instantánea, el sistema de construcción de Google AI Studio genera el compilado de forma automática listo para ejecutarse.
+            </p>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-lg mx-auto mb-10 text-left">
+                <h4 class="font-bold text-base sm:text-lg mb-4 flex items-center gap-2">
+                    📱 ¿Cómo descargar y abrir el APK?
+                </h4>
+                <ol class="space-y-3 text-xs sm:text-sm text-slate-400 list-decimal pl-5">
+                    <li>Visualiza el extremo superior del entorno de **Google AI Studio** en el que te encuentras chateando.</li>
+                    <li>Abre el menú desplegable de **Ajustes** (o el botón interactivo de acciones de desarrollo).</li>
+                    <li>Selecciona la opción **"Generar / Descargar APK"** o haz uso del botón **"Exportar Proyecto ZIP"** si deseas importar todo tu código limpio directamente a Android Studio.</li>
+                </ol>
+            </div>
+
+            <!-- Download Action Block -->
+            <div class="inline-flex flex-col sm:flex-row gap-4 items-center justify-center w-full px-4 sm:px-0">
+                <!-- Main Download Link -->
+                <a href="https://ais-dev-36a7b6kwn44uhau2ot2fzi-593358073059.us-east1.run.app" target="_blank" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-extrabold rounded-2xl shadow-xl shadow-cyan-500/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                    Ver Vista Previa en Vivo (Aplicación Web/Simulador)
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-brand-darker py-12 text-slate-500 text-xs sm:text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <img src="app/src/main/res/drawable/aura_solid_icon_1779563541367.png" alt="Aura Logo" class="w-6 h-6 rounded-lg opacity-75">
+                <span class="font-extrabold tracking-wider text-slate-400">AURA CLIMA</span>
+            </div>
+            <p class="text-center md:text-left">© 2026 Aura Clima. Todos los derechos reservados. Desarrollado con Jetpack Compose.</p>
+            <div class="flex gap-6">
+                <!-- Icon Link simple -->
+                <a href="#arquitectura" class="hover:text-brand-teal transition-colors">Código Limpio</a>
+                <a href="#inicio" class="hover:text-brand-teal transition-colors">Volver arriba</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Simple pure JS state manager for Hamburger Action -->
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classWithFallback === undefined ? mobileMenu.classList.contains('hidden') : false;
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                hamburgerIcon.classList.remove('block');
+                hamburgerIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+                closeIcon.classList.add('block');
+            } else {
+                mobileMenu.classList.add('hidden');
+                hamburgerIcon.classList.remove('hidden');
+                hamburgerIcon.classList.add('block');
+                closeIcon.classList.remove('block');
+                closeIcon.classList.add('hidden');
+            }
+        });
+
+        // Close menu when a link is clicked
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                hamburgerIcon.classList.remove('hidden');
+                hamburgerIcon.classList.add('block');
+                closeIcon.classList.remove('block');
+                closeIcon.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
