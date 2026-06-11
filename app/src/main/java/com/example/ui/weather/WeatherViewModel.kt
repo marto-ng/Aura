@@ -15,6 +15,10 @@ import com.example.data.repository.WeatherRepository
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import java.util.Locale
+import android.content.Context
+import android.content.Intent
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -122,11 +126,65 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                 val loc = _currentLocation.value
                 val weatherData = repository.getForecast(loc.latitude, loc.longitude)
                 _weatherState.value = WeatherUiState.Success(weatherData)
+                saveWeatherLocalCache(loc.name, weatherData)
             } catch (e: Exception) {
                 _weatherState.value = WeatherUiState.Error(
                     e.localizedMessage ?: "Error al intentar obtener la información del clima."
                 )
             }
+        }
+    }
+
+    private fun saveWeatherLocalCache(cityName: String, weatherData: WeatherResponse) {
+        try {
+            val context = getApplication<Application>().applicationContext
+            val prefs = context.getSharedPreferences("weather_widget_prefs", Context.MODE_PRIVATE)
+            val currentTemp = weatherData.current?.temperature2m ?: 22.0
+            val weatherCode = weatherData.current?.weatherCode ?: 0
+            val rainProb = weatherData.hourly?.precipitationProbability?.firstOrNull() ?: 15
+            val windSpeed = weatherData.current?.windSpeed10m ?: 0.0
+            val uvIndex = weatherData.current?.uvIndex ?: 0.0
+            
+            // Extract the 24-hour trend starting from the current hour
+            val hourly = weatherData.hourly
+            val trendString = if (hourly != null) {
+                try {
+                    val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:00", java.util.Locale.US)
+                    val currentHourStr = sdf.format(java.util.Date())
+                    val startIdx = hourly.time.indexOfFirst { it.startsWith(currentHourStr.substring(0, 13)) }
+                    val startIndexVal = if (startIdx != -1) startIdx else 0
+                    val indices = (startIndexVal until (startIndexVal + 24).coerceAtMost(hourly.time.size)).toList()
+                    indices.map { hourly.temperature2m.getOrNull(it) ?: currentTemp }.joinToString(",")
+                } catch (e: Exception) {
+                    ""
+                }
+            } else {
+                ""
+            }
+            
+            prefs.edit().apply {
+                putString("city_name", cityName)
+                putFloat("temperature", currentTemp.toFloat())
+                putInt("weather_code", weatherCode)
+                putInt("rain_probability", rainProb)
+                putFloat("wind_speed", windSpeed.toFloat())
+                putFloat("uv_index", uvIndex.toFloat())
+                putString("temp_trend", trendString)
+                apply()
+            }
+            
+            // Send update broadcast
+            val updateIntent = Intent(context, WeatherAppWidgetProvider::class.java).apply {
+                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            }
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, WeatherAppWidgetProvider::class.java))
+            if (ids.isNotEmpty()) {
+                updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+                context.sendBroadcast(updateIntent)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

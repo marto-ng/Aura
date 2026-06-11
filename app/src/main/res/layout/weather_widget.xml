@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/bg_widget"
+    android:focusable="true"
+    android:clickable="true">
+
+    <!-- Top Row: App Title & Update Time -->
+    <LinearLayout
+        android:id="@+id/top_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Aura Clima"
+            android:textColor="#00F2FE"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="--:--"
+            android:textColor="#E2E8F0"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Subtle Extreme Weather Alert Banner -->
+    <LinearLayout
+        android:id="@+id/widget_alert_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_row"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:visibility="gone"
+        android:background="@drawable/bg_widget_alert_orange">
+
+        <TextView
+            android:id="@+id/widget_alert_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚠️ Alerta: Clima Extremo Detectado"
+            android:textColor="#FF9800"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <!-- Main Content Section -->
+    <LinearLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_alert_banner"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Left Column: City, status description, and rain chance -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/widget_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Madrid"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1" />
+
+            <!-- Animated Flipper transitioning between actual weather stats and live recommendations with smooth fade transitions -->
+            <ViewFlipper
+                android:id="@+id/widget_flipper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoStart="true"
+                android:flipInterval="3000"
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out"
+                android:layout_marginTop="3dp">
+
+                <!-- Slide 1: Standard Current Weather Status -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/widget_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Despejado"
+                        android:textColor="#E2E8F0"
+                        android:textSize="13sp"
+                        android:ellipsize="end"
+                        android:maxLines="1" />
+
+                    <TextView
+                        android:id="@+id/widget_rain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💧 Lluvia: 0%"
+                        android:textColor="#38BDF8"
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <!-- Slide 2: Animation-like recommendation text based on the weather status -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/widget_recommendation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="✨ Que tengas un lindo día"
+                        android:textColor="#00F2FE"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:ellipsize="end"
+                        android:maxLines="1" />
+
+                    <TextView
+                        android:id="@+id/widget_recommendation_sub"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Aura Clima Activo"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp"
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:maxLines="1" />
+                </LinearLayout>
+            </ViewFlipper>
+        </LinearLayout>
+
+        <!-- Right Column: Temperature -->
+        <TextView
+            android:id="@+id/widget_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="--°C"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="end"
+            android:layout_marginLeft="8dp" />
+    </LinearLayout>
+
+    <!-- 24h Temperature Trend Chart Container -->
+    <LinearLayout
+        android:id="@+id/widget_chart_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_content"
+        android:layout_marginTop="6dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/widget_chart_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tendencia de Temperatura (Próximas 24h)"
+            android:textColor="#94A3B8"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp" />
+
+        <ImageView
+            android:id="@+id/widget_chart_image"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:scaleType="fitXY"
+            android:contentDescription="Grafica de tendencia de temperatura de 24 horas" />
+    </LinearLayout>
+
+</RelativeLayout>

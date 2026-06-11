@@ -88,4 +88,23 @@ object WeatherInfoHelper {
         }
         return alerts
     }
+
+    fun getWidgetAlert(temp: Double, uvIndex: Double, windSpeed: Double, code: Int): Pair<String, Boolean>? {
+        // Red alerts (extreme priority warning)
+        if (temp >= 40.0) return Pair("🚨 Ola calor extrema: ${temp.toInt()}°C", true)
+        if (temp <= -5.0) return Pair("🚨 Ola de frío extremo: ${temp.toInt()}°C", true)
+        if (code == 99) return Pair("🚨 Tormenta con granizo destructivo", true)
+        if (windSpeed >= 60.0) return Pair("⚠️ Viento destructivo: ${windSpeed.toInt()}km/h", true)
+        if (uvIndex >= 10.0) return Pair("⚠️ Radiación UV extrema de $uvIndex", true)
+
+        // Orange alerts (severe warning)
+        if (temp >= 35.0) return Pair("⚠️ Calor severo, mantente hidratado", false)
+        if (temp <= 0.0) return Pair("⚠️ Helada severa detectada: ${temp.toInt()}°C", false)
+        if (code in listOf(95, 96)) return Pair("⚡ Peligro de tormentas eléctricas", false)
+        if (code in listOf(65, 82)) return Pair("🌧️ Precipitación torrencial intensa", false)
+        if (windSpeed >= 40.0) return Pair("🌬️ Ráfagas fuertes: ${windSpeed.toInt()} km/h", false)
+        if (uvIndex >= 7.0) return Pair("☀️ UV Muy alto. Usa protector FPS 50+", false)
+
+        return null
+    }
 }

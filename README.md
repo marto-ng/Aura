@@ -35,6 +35,18 @@ La aplicación se destaca por su capacidad de autoubicación en tiempo real, sin
 ### 7. 🌡️ Conversión de Unidades al Instante
 * Conversión termodinámica instantánea entre grados **Celsius (°C)** y **Fahrenheit (°F)** presionando un solo botón en los detalles térmicos, propagándose a todos los paneles y tarjetas horarias de la pantalla.
 
+### 8. 🌌 Widget Climatológico Translúcido (Glassmorphism)
+* El fondo del widget de Aura para la pantalla de inicio de Android ahora adopta un diseño moderno de **vidrio esmerilado translúcido** con un borde cian neón interactivo, integrándose estéticamente con cualquier fondo de pantalla de tu dispositivo.
+
+### 9. 🎬 Carrusel Animado (ViewFlipper Nativo)
+* Transiciones suaves animadas mediante desvanecimiento que se ejecutan automáticamente cada 3 segundos, rotando de forma fluida entre estadísticas del clima real (temperatura actual, lluvia) y recomendaciones contextuales inteligentes según el estado climatológico.
+
+### 10. 🚨 Alertas Climáticas Proactivas en el Widget
+* Monitoreo prioritario nativo de peligros ambientales sutiles (tales como olas de calor/frío extremas, radiación UV alta, fuertes de viento o tormentas). El widget se viste opcionalmente de rojo de alerta extrema o naranja de advertencia crítica para alertar al usuario proactivamente.
+
+### 11. 📈 Gráfica de Tendencia Térmica NATIVA de 24 Horas
+* El widget dibuja en tiempo real una **gráfica de líneas fluida con un lienzo vectorizado (`Canvas` nativo)** mostrando la progresión térmica continua de las próximas 24 horas. Cuenta con un relleno de degradado cian que se difumina hacia las bases y señalizaciones legibles de las temperaturas máximas y mínimas calculadas.
+
 ---
 
 ## 🏗️ Arquitectura y Estructura del Código
