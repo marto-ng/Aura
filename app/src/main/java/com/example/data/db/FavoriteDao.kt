@@ -14,9 +14,9 @@ interface FavoriteDao {
     @Delete
     suspend fun deleteFavorite(favorite: FavoriteLocation)
 
-    @Query("DELETE FROM favorite_locations WHERE ABS(latitude - :lat) < 0.01 AND ABS(longitude - :lon) < 0.01")
+    @Query("DELETE FROM favorite_locations WHERE latitude BETWEEN (:lat - 0.01) AND (:lat + 0.01) AND longitude BETWEEN (:lon - 0.01) AND (:lon + 0.01)")
     suspend fun deleteByCoordinates(lat: Double, lon: Double)
 
-    @Query("SELECT COUNT(*) FROM favorite_locations WHERE ABS(latitude - :lat) < 0.01 AND ABS(longitude - :lon) < 0.01")
+    @Query("SELECT COUNT(*) FROM favorite_locations WHERE latitude BETWEEN (:lat - 0.01) AND (:lat + 0.01) AND longitude BETWEEN (:lon - 0.01) AND (:lon + 0.01)")
     fun isFavoriteExists(lat: Double, lon: Double): Flow<Int>
 }

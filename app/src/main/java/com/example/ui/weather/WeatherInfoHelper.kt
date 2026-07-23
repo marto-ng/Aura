@@ -39,28 +39,28 @@ object WeatherInfoHelper {
         }
     }
 
-    // Dynamic Atmospheric Background Gradient based on WMO code and Day/Night cycle
+    // Dynamic Atmospheric Background Gradient tuned for global dark theme
     fun getWeatherGradient(code: Int, isDay: Boolean): Brush {
         val colors = if (isDay) {
             when (code) {
-                0, 1 -> listOf(Color(0xFF42A5F5), Color(0xFF90CAF9), Color(0xFFE3F2FD)) // Beautiful vibrant day sky
-                2, 3 -> listOf(Color(0xFF78909C), Color(0xFFB0BEC5), Color(0xFFECEFF1)) // Overcast misty day
-                45, 48 -> listOf(Color(0xFFB0BEC5), Color(0xFFCFD8DC), Color(0xFFECEFF1)) // Foggy slate
-                51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82 -> listOf(Color(0xFF37474F), Color(0xFF546E7A), Color(0xFF90A4AE)) // Rainy sky day
-                71, 73, 75, 77, 85, 86 -> listOf(Color(0xFFCFD8DC), Color(0xFFECEFF1), Color(0xFFF5F5F5)) // Snowy bright gray
-                95, 96, 99 -> listOf(Color(0xFF263238), Color(0xFF37474F), Color(0xFF78909C)) // Stormy dark blue/gray
-                else -> listOf(Color(0xFF42A5F5), Color(0xFF90CAF9), Color(0xFFE3F2FD))
+                0, 1 -> listOf(Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)) // Dark cyan day sky
+                2, 3 -> listOf(Color(0xFF1E293B), Color(0xFF334155), Color(0xFF475569)) // Dark overcast slate
+                45, 48 -> listOf(Color(0xFF1A202C), Color(0xFF2D3748), Color(0xFF4A5568)) // Dark foggy slate
+                51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82 -> listOf(Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF334155)) // Dark rain slate
+                71, 73, 75, 77, 85, 86 -> listOf(Color(0xFF1E293B), Color(0xFF334155), Color(0xFF475569)) // Dark snow slate
+                95, 96, 99 -> listOf(Color(0xFF0B0F19), Color(0xFF181E29), Color(0xFF2D3748)) // Storm dark slate
+                else -> listOf(Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364))
             }
         } else {
             // Night gradients
             when (code) {
-                0, 1 -> listOf(Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF334155)) // Dark starry blue
-                2, 3 -> listOf(Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF475569)) // Dark cloudy blue
-                45, 48 -> listOf(Color(0xFF1E293B), Color(0xFF334155), Color(0xFF475569)) // Misty night, silver highlights
-                51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82 -> listOf(Color(0xFF0A0F1D), Color(0xFF111827), Color(0xFF1F2937)) // Rainy cold night
-                71, 73, 75, 77, 85, 86 -> listOf(Color(0xFF1E293B), Color(0xFF334155), Color(0xFF64748B)) // Snowy dim night 
-                95, 96, 99 -> listOf(Color(0xFF090D16), Color(0xFF111827), Color(0xFF374151)) // Heavy storm night
-                else -> listOf(Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF334155))
+                0, 1 -> listOf(Color(0xFF090D16), Color(0xFF0F172A), Color(0xFF1E293B)) // Deep starry night
+                2, 3 -> listOf(Color(0xFF0B0F19), Color(0xFF151D30), Color(0xFF253047)) // Dark cloudy night
+                45, 48 -> listOf(Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF334155)) // Dark misty night
+                51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82 -> listOf(Color(0xFF080C14), Color(0xFF0F172A), Color(0xFF1E293B)) // Dark rain night
+                71, 73, 75, 77, 85, 86 -> listOf(Color(0xFF0F172A), Color(0xFF1E293B), Color(0xFF334155)) // Dark snow night
+                95, 96, 99 -> listOf(Color(0xFF05080E), Color(0xFF0B0F19), Color(0xFF181E29)) // Dark storm night
+                else -> listOf(Color(0xFF090D16), Color(0xFF0F172A), Color(0xFF1E293B))
             }
         }
         return Brush.verticalGradient(colors)

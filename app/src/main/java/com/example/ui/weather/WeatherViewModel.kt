@@ -19,10 +19,12 @@ import android.content.Context
 import android.content.Intent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 sealed interface WeatherUiState {
     object Loading : WeatherUiState
@@ -67,6 +69,12 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     // Temperature unit: true for Celsius, false for Fahrenheit
     private val _isCelsius = MutableStateFlow(true)
     val isCelsius: StateFlow<Boolean> = _isCelsius.asStateFlow()
+
+    // Battery Optimization: Memory Cache variables to avoid repetitive network and radio cycles
+    private var lastFetchedTime = 0L
+    private var lastFetchedLat = 0.0
+    private var lastFetchedLon = 0.0
+    private var lastFetchedData: WeatherResponse? = null
 
     // List of favorite locations from database
     val favorites: StateFlow<List<FavoriteLocation>> = repository.allFavorites
@@ -121,16 +129,43 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
 
     fun fetchWeatherForCurrentLocation() {
         viewModelScope.launch {
+            val loc = _currentLocation.value
+            val now = System.currentTimeMillis()
+            
+            // Battery Optimization: Check if location and time fall within cached interval (5 minutes/300 seconds)
+            val isSameLocation = kotlin.math.abs(loc.latitude - lastFetchedLat) < 0.001 &&
+                                 kotlin.math.abs(loc.longitude - lastFetchedLon) < 0.001
+            val isFresh = (now - lastFetchedTime) < 5 * 60 * 1000 // 5 minutes fresh window
+
+            val cachedData = lastFetchedData
+            if (isSameLocation && isFresh && cachedData != null) {
+                // Instantly emit cache to preserve antenna power-ups & redundant CPU/network overhead
+                _weatherState.value = WeatherUiState.Success(cachedData)
+                return@launch
+            }
+
             _weatherState.value = WeatherUiState.Loading
             try {
-                val loc = _currentLocation.value
                 val weatherData = repository.getForecast(loc.latitude, loc.longitude)
+                
+                // Store in both memory cache and local widget cache
+                lastFetchedTime = now
+                lastFetchedLat = loc.latitude
+                lastFetchedLon = loc.longitude
+                lastFetchedData = weatherData
+
                 _weatherState.value = WeatherUiState.Success(weatherData)
                 saveWeatherLocalCache(loc.name, weatherData)
             } catch (e: Exception) {
-                _weatherState.value = WeatherUiState.Error(
-                    e.localizedMessage ?: "Error al intentar obtener la información del clima."
-                )
+                // Offline fallback: Use the last cached data if available rather than throwing immediate error
+                val fallbackData = lastFetchedData
+                if (isSameLocation && fallbackData != null) {
+                    _weatherState.value = WeatherUiState.Success(fallbackData)
+                } else {
+                    _weatherState.value = WeatherUiState.Error(
+                        e.localizedMessage ?: "Error al intentar obtener la información del clima."
+                    )
+                }
             }
         }
     }
@@ -192,7 +227,8 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         _searchQuery.value = newQuery
         searchJob?.cancel()
 
-        if (newQuery.trim().length < 3) {
+        val trimmedQuery = newQuery.trim()
+        if (trimmedQuery.length < 3) {
             _searchResults.value = emptyList()
             _isSearching.value = false
             return
@@ -202,7 +238,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             _isSearching.value = true
             delay(350) // Debounce autocompletion query
             try {
-                val results = repository.searchLocations(newQuery)
+                val results = repository.searchLocations(trimmedQuery)
                 _searchResults.value = results
             } catch (e: Exception) {
                 // Log or fail gracefully, do not crash autocompletion
@@ -244,7 +280,10 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         
         _weatherState.value = WeatherUiState.Loading
         
-        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+        // Battery Optimization: Use PRIORITY_BALANCED_POWER_ACCURACY rather than PRIORITY_HIGH_ACCURACY.
+        // For general weather applications, city-level accuracy resolved via Wi-Fi/cell tower is perfect
+        // and consumes up to 90% less battery compared to cold booting actual physical GPS hardware sensors.
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
             .addOnSuccessListener { location ->
                 if (location != null) {
                     viewModelScope.launch {
@@ -256,13 +295,15 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                         var adminArea: String? = null
                         
                         try {
-                            val geocoder = Geocoder(context, Locale.getDefault())
-                            val addresses = geocoder.getFromLocation(lat, lon, 1)
-                            if (!addresses.isNullOrEmpty()) {
-                                val addr = addresses[0]
-                                cityName = addr.locality ?: addr.subAdminArea ?: addr.adminArea ?: "Ubicación Actual"
-                                countryName = addr.countryName ?: ""
-                                adminArea = addr.adminArea
+                            withContext(Dispatchers.IO) {
+                                val geocoder = Geocoder(context, Locale.getDefault())
+                                val addresses = geocoder.getFromLocation(lat, lon, 1)
+                                if (!addresses.isNullOrEmpty()) {
+                                    val addr = addresses[0]
+                                    cityName = addr.locality ?: addr.subAdminArea ?: addr.adminArea ?: "Ubicación Actual"
+                                    countryName = addr.countryName ?: ""
+                                    adminArea = addr.adminArea
+                                }
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -306,13 +347,15 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                     var countryName = ""
                     var adminArea: String? = null
                     try {
-                        val geocoder = Geocoder(context, Locale.getDefault())
-                        val addresses = geocoder.getFromLocation(lat, lon, 1)
-                        if (!addresses.isNullOrEmpty()) {
-                            val addr = addresses[0]
-                            cityName = addr.locality ?: addr.subAdminArea ?: addr.adminArea ?: "Ubicación"
-                            countryName = addr.countryName ?: ""
-                            adminArea = addr.adminArea
+                        withContext(Dispatchers.IO) {
+                            val geocoder = Geocoder(context, Locale.getDefault())
+                            val addresses = geocoder.getFromLocation(lat, lon, 1)
+                            if (!addresses.isNullOrEmpty()) {
+                                val addr = addresses[0]
+                                cityName = addr.locality ?: addr.subAdminArea ?: addr.adminArea ?: "Ubicación"
+                                countryName = addr.countryName ?: ""
+                                adminArea = addr.adminArea
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
