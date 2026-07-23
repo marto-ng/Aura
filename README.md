@@ -8,7 +8,18 @@ La aplicación se destaca por su capacidad de autoubicación en tiempo real, sin
 
 ## 🎨 Características Destacadas
 
-### 1. 📍 Autoubicación mediante GPS de Alta Precisión
+### 1. 🌙 Tema Oscuro Global Elegante (Versión 3.0)
+* Adopción global de una paleta de noche profunda (Deep Night Slate `#0B1120`, `DarkSurface` `#151D30`, `DarkPrimary` `#38BDF8`), contraste elevado y gradientes atmosféricos dinámicos en Jetpack Compose.
+* Experiencia visual fluida y consistente en todas las tarjetas de información, métricas horarias y pantallas de la aplicación.
+
+### 2. 🔒 Endurecimiento de Seguridad y Privacidad (allowBackup="false")
+* Desactivación de respaldos automáticos en el manifiesto de Android para proteger la privacidad local del usuario ante posibles extracciones no autorizadas en nubes de terceros o mediante depuración adb.
+
+### 3. ⚡ Hilos Asíncronos (Dispatchers.IO) y Tiempos de Red
+* Ejecución de tareas de geocodificación inversa en hilos de entrada/salida (`Dispatchers.IO`) para garantizar fluidez total de la interfaz de usuario sin bloqueos.
+* Políticas de conexión seguras en Retrofit/OkHttp con timeouts de 15 segundos para máxima resistencia ante redes inestables.
+
+### 4. 📍 Autoubicación mediante GPS de Alta Precisión
 * Aura utiliza **Google Play Services Location API** para adquirir de forma automática las coordenadas del dispositivo en tiempo real.
 * A través de un servicio integrado de **Reverse Geocoding (Geocoder de Android)**, traduce la latitud y longitud físicas a una ciudad legible con su correspondiente estado/provincia y país.
 * Ofrece un botón flotante de acceso directo en la barra de búsqueda para refrescar la ubicación en cualquier momento.

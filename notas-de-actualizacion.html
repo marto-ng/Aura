@@ -64,11 +64,11 @@
         <div class="text-center mb-16 relative">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-brand-teal/10 rounded-full blur-[100px] pointer-events-none"></div>
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-teal/10 text-brand-teal border border-brand-teal/20 mb-4 uppercase tracking-widest">
-                VERSIÓN 2.5 (NUEVA ACTUALIZACIÓN)
+                VERSIÓN 3.0 (ÚLTIMA ACTUALIZACIÓN)
             </span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight">Notas de <span class="gradient-text">Actualización</span></h1>
+            <h1 class="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight">Notas de <span class="gradient-text">Actualización v3.0</span></h1>
             <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
-                Descubre las potentes mejoras incorporadas en el ecosistema adaptativo de Aura. Hemos rediseñado la interfaz del Widget nativo e integrado capacidades climáticas proactivas de vanguardia.
+                Descubre las potentes mejoras incorporadas en el ecosistema adaptativo de Aura: Tema oscuro global unificado, endurecimiento de seguridad en respaldos y optimización asíncrona de alto rendimiento.
             </p>
         </div>
 
@@ -77,21 +77,38 @@
             <!-- Vertical Line Connecting Steps -->
             <div class="absolute left-6 top-6 bottom-6 w-0.5 bg-slate-800/80 hidden sm:block"></div>
 
-            <!-- CARD 1: Transparencia & Glassmorphism -->
+            <!-- CARD 0: Tema Oscuro Global & Seguridad v3.0 -->
             <div class="relative sm:pl-16">
                 <!-- Circular Icon Pin -->
                 <div class="absolute left-3 sm:left-3.5 top-0 w-6 h-6 rounded-full bg-brand-darker border-4 border-[#00F2FE] shadow-md z-10 hidden sm:block"></div>
-                <div class="bg-slate-900/70 border border-slate-800/80 rounded-3xl p-6 sm:p-8 hover:border-[#00F2FE]/40 transition-colors">
-                    <span class="text-xs font-bold text-slate-500 uppercase font-mono block mb-2">Módulo 1: Diseño del Widget</span>
+                <div class="bg-slate-900/90 border border-[#00F2FE]/40 rounded-3xl p-6 sm:p-8 glow-border transition-colors">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-brand-teal uppercase font-mono">Módulo Principal: Versión 3.0</span>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">ÚLTIMO RELEASE</span>
+                    </div>
                     <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-3 flex items-center gap-3">
-                        🌌 Fondo de Vidrio Translúcido (Glassmorphism)
+                        🌙 Tema Oscuro Global & Endurecimiento de Seguridad
                     </h3>
                     <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
-                        El fondo del widget del clima ha sido completamente renovado. Dejamos atrás el fondo azul opaco para dar paso a un estilo de **vidrio esmerilado semitransparente (estilo Glassmorphism)** con un sutil borde neón de cian interactivo.
+                        Se ha implementado una transformación integral de la experiencia visual y la arquitectura de datos del aplicativo:
                     </p>
-                    <ul class="space-y-2 text-xs sm:text-sm text-slate-400 list-disc pl-5">
-                        <li>Fusión armoniosa con cualquier fondo de pantalla configurado por el usuario en su launcher de Android con transparencia adaptada (canal alfa ultra sutil).</li>
-                        <li>Borde fino del 20% de brillo con luz reflejada interactiva que realza los contrastes visuales bajo luz directa.</li>
+                    <ul class="space-y-3 text-xs sm:text-sm text-slate-300 list-none pl-0">
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Tema Oscuro Elegante Unificado:</strong> Adopción global de paleta de noche profunda (Deep Night Slate <code class="bg-slate-800 px-1.5 py-0.5 rounded text-brand-teal font-mono">#0B1120</code>), contraste elevado y gradientes atmosféricos en Jetpack Compose.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Protección de Datos Privados (<code class="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono">allowBackup="false"</code>):</strong> Configuración del manifiesto de Android para prevenir la extracción no autorizada de datos locales en la nube o respaldos adb.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Geocodificación Asíncrona en Corutinas (<code class="bg-slate-800 px-1.5 py-0.5 rounded text-emerald-400 font-mono">Dispatchers.IO</code>):</strong> Traslado de las consultas Geocoder a hilos de entrada/salida para garantizar 0 bloqueos en la interfaz principal.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Optimización de Consultas SQL en Room:</strong> Reestructuración de búsqueda de coordenadas mediante rangos SQL (<code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-400 font-mono">BETWEEN</code>) evitando sobrecostos por funciones escalares.</span>
+                        </li>
                     </ul>
                 </div>
             </div>
