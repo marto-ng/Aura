@@ -59,20 +59,36 @@ class WeatherRepositoryImpl(
     }
 
     override suspend fun searchLocations(query: String): List<GeocodingResult> {
-        val response = geocodingApi.searchLocations(name = query)
-        return response.results ?: emptyList()
+        return try {
+            val response = geocodingApi.searchLocations(name = query)
+            response.results ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
     override suspend fun insertFavorite(favorite: FavoriteLocation) {
-        favoriteDao.insertFavorite(favorite)
+        try {
+            favoriteDao.insertFavorite(favorite)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override suspend fun deleteFavorite(favorite: FavoriteLocation) {
-        favoriteDao.deleteFavorite(favorite)
+        try {
+            favoriteDao.deleteFavorite(favorite)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override suspend fun deleteFavoriteByCoordinates(latitude: Double, longitude: Double) {
-        favoriteDao.deleteByCoordinates(latitude, longitude)
+        try {
+            favoriteDao.deleteByCoordinates(latitude, longitude)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun isFavorite(latitude: Double, longitude: Double): Flow<Boolean> {

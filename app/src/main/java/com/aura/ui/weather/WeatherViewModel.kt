@@ -54,6 +54,13 @@ class WeatherViewModel(
     private val _isSearching = MutableStateFlow(false)
     val isSearching: StateFlow<Boolean> = _isSearching.asStateFlow()
 
+    private val _searchError = MutableStateFlow<String?>(null)
+    val searchError: StateFlow<String?> = _searchError.asStateFlow()
+
+    // Transient user message / snackbar notifications
+    private val _userMessage = MutableStateFlow<String?>(null)
+    val userMessage: StateFlow<String?> = _userMessage.asStateFlow()
+
     // Temperature unit: true for Celsius, false for Fahrenheit
     private val _isCelsius = MutableStateFlow(true)
     val isCelsius: StateFlow<Boolean> = _isCelsius.asStateFlow()
@@ -81,6 +88,10 @@ class WeatherViewModel(
         fetchWeatherForCurrentLocation()
     }
 
+    fun clearUserMessage() {
+        _userMessage.value = null
+    }
+
     fun selectLocation(city: String, country: String, admin1: String?, lat: Double, lon: Double) {
         _currentLocation.value = LocationDomainModel(
             name = city,
@@ -91,6 +102,7 @@ class WeatherViewModel(
         )
         _searchQuery.value = ""
         _searchResults.value = emptyList()
+        _searchError.value = null
         fetchWeatherForCurrentLocation()
     }
 
@@ -115,7 +127,7 @@ class WeatherViewModel(
                 }
                 .onFailure { error ->
                     _weatherState.value = WeatherUiState.Error(
-                        error.localizedMessage ?: "Error al obtener la información meteorológica."
+                        error.message ?: "Error al obtener la información meteorológica."
                     )
                 }
         }
@@ -124,6 +136,7 @@ class WeatherViewModel(
     fun onSearchQueryChanged(newQuery: String) {
         _searchQuery.value = newQuery
         searchJob?.cancel()
+        _searchError.value = null
 
         val trimmedQuery = newQuery.trim()
         if (trimmedQuery.length < 3) {
@@ -135,17 +148,32 @@ class WeatherViewModel(
         searchJob = viewModelScope.launch {
             _isSearching.value = true
             delay(350)
-            val results = searchLocationsUseCase(trimmedQuery)
-            _searchResults.value = results
+            val result = searchLocationsUseCase(trimmedQuery)
+            result.onSuccess { results ->
+                _searchResults.value = results
+                _searchError.value = null
+            }.onFailure { error ->
+                _searchResults.value = emptyList()
+                _searchError.value = error.message ?: "Error al buscar ubicaciones."
+            }
             _isSearching.value = false
         }
     }
 
     fun toggleFavorite() {
         viewModelScope.launch {
-            val loc = _currentLocation.value
-            val currentlyFav = isCurrentFavorite.value
-            manageFavoritesUseCase.toggleFavorite(loc, currentlyFav)
+            try {
+                val loc = _currentLocation.value
+                val currentlyFav = isCurrentFavorite.value
+                manageFavoritesUseCase.toggleFavorite(loc, currentlyFav)
+                _userMessage.value = if (currentlyFav) {
+                    "${loc.name} eliminada de favoritos"
+                } else {
+                    "⭐ ${loc.name} guardada en favoritos"
+                }
+            } catch (e: Exception) {
+                _userMessage.value = "Error al actualizar favoritos: ${e.localizedMessage}"
+            }
         }
     }
 
@@ -156,14 +184,31 @@ class WeatherViewModel(
     fun loadWeatherFromGps() {
         viewModelScope.launch {
             _weatherState.value = WeatherUiState.Loading
-            val gpsLocation = getGpsLocationUseCase()
-            if (gpsLocation != null) {
-                _currentLocation.value = gpsLocation
-                fetchWeatherForCurrentLocation()
-            } else {
+            try {
+                val gpsLocation = getGpsLocationUseCase()
+                if (gpsLocation != null) {
+                    _currentLocation.value = gpsLocation
+                    _userMessage.value = "📍 Ubicación actualizada: ${gpsLocation.name}"
+                    fetchWeatherForCurrentLocation()
+                } else {
+                    _userMessage.value = "Ubicación GPS no disponible. Mostrando ciudad predeterminada."
+                    fetchWeatherForCurrentLocation()
+                }
+            } catch (e: Exception) {
+                _userMessage.value = "Error al obtener la ubicación GPS."
                 fetchWeatherForCurrentLocation()
             }
         }
+    }
+
+    fun resetToDefaultLocation() {
+        selectLocation(
+            city = LocationDomainModel.DEFAULT.name,
+            country = LocationDomainModel.DEFAULT.country,
+            admin1 = LocationDomainModel.DEFAULT.admin1,
+            lat = LocationDomainModel.DEFAULT.latitude,
+            lon = LocationDomainModel.DEFAULT.longitude
+        )
     }
 
     companion object {

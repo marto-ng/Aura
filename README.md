@@ -16,7 +16,13 @@ La aplicación se destaca por su capacidad de autoubicación en tiempo real, sin
 ### 2. 🎯 Sincronización Térmica Exacta de Estado Actual y Pronóstico (Versión 3.3)
 * Corrección y alineación estricta del estado térmico: La temperatura actual en tiempo real y el código de condición meteorológica de la cabecera principal coinciden exactamente con el primer elemento (**"Ahora"**) de la carrusel horaria de 24 horas y de la gráfica de tendencia térmica.
 
-### 3. ⏰ Tareas Programadas (WorkManager) & Hora Local por Ubicación (Versión 3.2)
+### 3. 🛡️ Manejo Inteligente de Errores & Botón de Rescate (Versión 3.3)
+* **Traducción Amigable de Errores de Red:** Captura de excepciones HTTP/IO (`UnknownHostException`, `SocketTimeoutException`, `HttpException`) con interpretación automática en español para informar problemas de conectividad Wi-Fi/datos móviles o caídas del servidor.
+* **Tarjeta de Error & Botón de Rescate:** Tarjeta rediseñada en la interfaz principal que incluye botón de **Reintentar** y botón de rescate directo a **Madrid** para restablecer la aplicación en caso de falla de GPS o red.
+* **Notificaciones Snackbar:** Avisos interactivos flotantes al agregar/eliminar ubicaciones de favoritos y al sincronizar con el GPS.
+* **Manejo Seguro en Base de Datos:** Aislamiento de excepciones en operaciones con Room SQLite para evitar cierres inesperados.
+
+### 4. ⏰ Tareas Programadas (WorkManager) & Hora Local por Ubicación (Versión 3.2)
 * **Resumen Matutino Automático (`DailyWeatherWorker`):** Trabajo periódico en segundo plano que envía cada mañana (07:30 AM) una notificación enriquecida con el pronóstico del día y alertas de la ubicación actual.
 * **Hora y Fecha Local Internacional:** Detección de zona horaria y cálculo dinámico de la hora local exacta según la ubicación buscada (ej: Tokio, París, Buenos Aires).
 

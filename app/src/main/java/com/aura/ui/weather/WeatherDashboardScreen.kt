@@ -54,12 +54,23 @@ fun WeatherDashboardScreen(
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val searchResults by viewModel.searchResults.collectAsStateWithLifecycle()
     val isSearching by viewModel.isSearching.collectAsStateWithLifecycle()
+    val searchError by viewModel.searchError.collectAsStateWithLifecycle()
+    val userMessage by viewModel.userMessage.collectAsStateWithLifecycle()
     val isCelsius by viewModel.isCelsius.collectAsStateWithLifecycle()
     val favorites by viewModel.favorites.collectAsStateWithLifecycle()
     val isCurrentFavorite by viewModel.isCurrentFavorite.collectAsStateWithLifecycle()
 
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(userMessage) {
+        userMessage?.let { msg ->
+            snackbarHostState.showSnackbar(msg)
+            viewModel.clearUserMessage()
+        }
+    }
 
     // Set up location permission launcher
     val locationPermissionLauncher = rememberLauncherForActivityResult(
@@ -235,7 +246,7 @@ fun WeatherDashboardScreen(
             }
 
                 // Dropdown autocomplete search results sheet
-                if (isSearching || searchResults.isNotEmpty()) {
+                if (isSearching || searchResults.isNotEmpty() || searchError != null || (searchQuery.trim().length >= 3 && searchResults.isEmpty())) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -264,6 +275,33 @@ fun WeatherDashboardScreen(
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text("Buscando ubicaciones...", style = MaterialTheme.typography.bodyMedium)
                                 }
+                            } else if (searchError != null) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Warning,
+                                        contentDescription = "Error icon",
+                                        tint = MaterialTheme.colorScheme.error,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = searchError ?: "Error al buscar",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                }
+                            } else if (searchResults.isEmpty() && searchQuery.trim().length >= 3) {
+                                Text(
+                                    text = "No se encontraron ciudades con \"${searchQuery.trim()}\"",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                                    modifier = Modifier.padding(12.dp)
+                                )
                             } else {
                                 searchResults.take(6).forEach { result ->
                                     Row(
@@ -419,37 +457,58 @@ fun WeatherDashboardScreen(
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(24.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp)
+                                .clip(RoundedCornerShape(24.dp))
+                                .background(Color.Black.copy(alpha = 0.35f))
+                                .padding(24.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Warning,
                                 contentDescription = "Error icon",
                                 tint = Color(0xFFFF5252),
-                                modifier = Modifier.size(48.dp)
+                                modifier = Modifier.size(52.dp)
                             )
-                            Spacer(modifier = Modifier.height(12.dp))
+                            Spacer(modifier = Modifier.height(14.dp))
                             Text(
-                                text = "Ocurrió un error",
+                                text = "No se pudo cargar el clima",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold
                             )
-                            Spacer(modifier = Modifier.height(4.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
                             Text(
                                 text = state.message,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.White.copy(alpha = 0.8f),
+                                color = Color.White.copy(alpha = 0.85f),
                                 textAlign = TextAlign.Center
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(
-                                onClick = { viewModel.fetchWeatherForCurrentLocation() },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.25f))
+                            Spacer(modifier = Modifier.height(20.dp))
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(Icons.Default.Refresh, contentDescription = "Retry", tint = Color.White)
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Reintentar", color = Color.White)
+                                Button(
+                                    onClick = { viewModel.fetchWeatherForCurrentLocation() },
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(Icons.Default.Refresh, contentDescription = "Retry", tint = Color.Black)
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text("Reintentar", color = Color.Black, fontWeight = FontWeight.Bold)
+                                    }
+                                }
+                                OutlinedButton(
+                                    onClick = { viewModel.resetToDefaultLocation() },
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.6f))
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(Icons.Default.Home, contentDescription = "Default Location", tint = Color.White)
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text("Madrid", color = Color.White)
+                                    }
                                 }
                             }
                         }
@@ -972,6 +1031,13 @@ fun WeatherDashboardScreen(
                 }
             }
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
+        )
     }
 }
 
