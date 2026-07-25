@@ -1,4 +1,4 @@
-package com.example.ui.weather
+package com.aura.ui.weather
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush

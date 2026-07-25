@@ -1,4 +1,4 @@
-package com.example.data.db
+package com.aura.data.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

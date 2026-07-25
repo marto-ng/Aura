@@ -103,7 +103,7 @@
             <!-- Text Column -->
             <div class="lg:col-span-7 flex flex-col justify-center text-center lg:text-left">
                 <span class="inline-flex items-center gap-2 self-center lg:self-start px-3 py-1 rounded-full text-xs font-semibold bg-brand-teal/10 text-brand-teal border border-brand-teal/20 mb-6">
-                    ⚡ Versión 3.2: Tareas Programadas (WorkManager) & Hora Local por Ubicación
+                    ⚡ Versión 3.3: Gráfica Interactiva de Tendencia (24h) & Sincronización Térmica
                 </span>
                 <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
                     El Clima en Armonía con <span class="gradient-text">tu Ritmo</span>
@@ -360,26 +360,31 @@
                         <span class="text-[10px] sm:text-xs font-mono text-slate-500">AuraArchitectureTree.kt</span>
                     </div>
                     <pre class="font-mono text-[10px] sm:text-xs text-slate-400 overflow-x-auto whitespace-pre-wrap sm:whitespace-pre">
-<span class="text-cyan-400">package</span> com.example
+<span class="text-cyan-400">package</span> com.aura
 
 <span class="text-slate-500">// Arquitectura del Proyecto</span>
-com.example
-├── MainActivity.kt         <span class="text-slate-500">// Entry Point (Compose Engine)</span>
+com.aura
+├── MainActivity.kt         <span class="text-slate-500">// Entry Point (Edge-to-Edge)</span>
+├── AuraApplication.kt      <span class="text-slate-500">// Inicializador WorkManager</span>
 ├── data
 │   ├── api
-│   │   ├── GeocodingResponse.kt
-│   │   └── WeatherApiService.kt <span class="text-slate-500">// Retrofit REST Setup</span>
+│   │   └── WeatherApiService.kt <span class="text-slate-500">// Retrofit REST Client</span>
 │   ├── db
-│   │   ├── ClimaDatabase.kt     <span class="text-slate-550">// Room Database</span>
-│   │   └── LocationDao.kt       <span class="text-slate-500">// Queries SQL</span>
+│   │   ├── ClimaDatabase.kt     <span class="text-slate-500">// Room SQLite DB</span>
+│   │   └── FavoriteDao.kt       <span class="text-slate-500">// Queries SQL</span>
 │   └── repository
-│       └── WeatherRepository.kt <span class="text-slate-500">// Single Source of Truth</span>
+│       └── WeatherRepositoryImpl.kt <span class="text-slate-500">// Source of Truth</span>
+├── domain
+│   ├── model/usecase           <span class="text-slate-500">// Casos de Negocio</span>
+├── worker
+│   └── DailyWeatherWorker.kt   <span class="text-slate-500">// WorkManager Tasks</span>
 └── ui
     ├── theme
-    │   └── Theme.kt             <span class="text-slate-500">// Gradientes M3</span>
+    │   └── Theme.kt             <span class="text-slate-500">// M3 Theme & Gradients</span>
     └── weather
-        ├── WeatherDashboardScreen.kt <span class="text-slate-500">// UI declarativa</span>
-        └── WeatherViewModel.kt  <span class="text-slate-500">// Modelo de Estado</span></pre>
+        ├── WeatherDashboardScreen.kt <span class="text-slate-500">// UI Principal</span>
+        ├── TemperatureTrendChart.kt  <span class="text-slate-500">// Gráfica 24h Compose</span>
+        └── WeatherViewModel.kt  <span class="text-slate-500">// StateFlow Engine</span></pre>
                 </div>
             </div>
         </div>

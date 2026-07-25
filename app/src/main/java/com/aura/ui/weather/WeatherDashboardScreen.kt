@@ -1,4 +1,4 @@
-package com.example.ui.weather
+package com.aura.ui.weather
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,12 +36,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.data.api.DailyWeather
-import com.example.data.api.GeocodingResult
-import com.example.data.api.HourlyWeather
-import com.example.data.api.WeatherResponse
-import com.example.data.db.FavoriteLocation
-import com.example.worker.DailyWeatherWorker
+import com.aura.data.api.DailyWeather
+import com.aura.data.api.GeocodingResult
+import com.aura.data.api.HourlyWeather
+import com.aura.data.api.WeatherResponse
+import com.aura.data.db.FavoriteLocation
+import com.aura.worker.DailyWeatherWorker
 import java_text_SimpleDateFormat_compatibility.getDayOfWeekSpanish
 
 @Composable
@@ -644,27 +644,8 @@ fun WeatherDashboardScreen(
                             Spacer(modifier = Modifier.height(24.dp))
                         }
 
-                        // Hourly carousel for next 24 Hours
+                        // Interactive 24-Hour Temperature Trend Chart (Touch Gestures Supported)
                         item {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    text = "Pronóstico 24 Horas",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "Hora local de la ciudad",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = Color.White.copy(alpha = 0.6f)
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-
                             state.weather.hourly?.let { hourly ->
                                 val indices = remember(hourly.time, locationTimeZone) {
                                     try {
@@ -682,6 +663,35 @@ fun WeatherDashboardScreen(
                                         (0..23).toList()
                                     }
                                 }
+
+                                TemperatureTrendChart(
+                                    hourly = hourly,
+                                    indices = indices,
+                                    isCelsius = isCelsius,
+                                    currentTemp = currentTemp,
+                                    currentWeatherCode = weatherCode,
+                                    modifier = Modifier.padding(bottom = 16.dp)
+                                )
+
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "Pronóstico 24 Horas",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = "Hora local de la ciudad",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color.White.copy(alpha = 0.6f)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+
                                 LazyRow(
                                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                                     modifier = Modifier.fillMaxWidth()
@@ -689,9 +699,9 @@ fun WeatherDashboardScreen(
                                     items(indices) { index ->
                                         val isCurrentHourItem = index == indices.firstOrNull()
                                         val timeStr = hourly.time.getOrNull(index) ?: ""
-                                        val temp = hourly.temperature2m.getOrNull(index) ?: 0.0
+                                        val temp = if (isCurrentHourItem) currentTemp else (hourly.temperature2m.getOrNull(index) ?: 0.0)
                                         val prob = hourly.precipitationProbability.getOrNull(index) ?: 0
-                                        val code = hourly.weatherCode.getOrNull(index) ?: 0
+                                        val code = if (isCurrentHourItem) weatherCode else (hourly.weatherCode.getOrNull(index) ?: 0)
 
                                         val isHourlyDay = try {
                                             val hour = timeStr.substringAfter('T').substringBefore(':').toInt()

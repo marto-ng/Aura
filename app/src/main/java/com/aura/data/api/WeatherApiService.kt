@@ -1,4 +1,4 @@
-package com.example.data.api
+package com.aura.data.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

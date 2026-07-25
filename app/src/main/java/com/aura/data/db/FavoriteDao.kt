@@ -1,4 +1,4 @@
-package com.example.data.db
+package com.aura.data.db
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

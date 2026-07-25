@@ -1,4 +1,4 @@
-package com.example.ui.weather
+package com.aura.ui.weather
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -17,8 +17,8 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import android.view.View
 import android.widget.RemoteViews
-import com.example.MainActivity
-import com.example.R
+import com.aura.MainActivity
+import com.aura.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -64,11 +64,11 @@
         <div class="text-center mb-16 relative">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-brand-teal/10 rounded-full blur-[100px] pointer-events-none"></div>
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-teal/10 text-brand-teal border border-brand-teal/20 mb-4 uppercase tracking-widest">
-                VERSIÓN 3.2 (ÚLTIMA ACTUALIZACIÓN)
+                VERSIÓN 3.3 (ÚLTIMA ACTUALIZACIÓN)
             </span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight">Notas de <span class="gradient-text">Actualización v3.2</span></h1>
+            <h1 class="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight">Notas de <span class="gradient-text">Actualización v3.3</span></h1>
             <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
-                Descubre las potentes mejoras de Aura: Tareas programadas en segundo plano con WorkManager para notificaciones matutinas, cálculo automático de hora/zona horaria local según la ubicación buscada, tema oscuro unificado y seguridad avanzada.
+                Descubre las potentes mejoras de Aura: Gráfica interactiva de tendencia térmica de 24 horas con gestos táctiles en Jetpack Compose, sincronización térmica exacta entre la temperatura actual y el pronóstico de 24 horas, tareas programadas con WorkManager y arquitectura limpia con paquetes com.aura.
             </p>
         </div>
 
@@ -77,14 +77,49 @@
             <!-- Vertical Line Connecting Steps -->
             <div class="absolute left-6 top-6 bottom-6 w-0.5 bg-slate-800/80 hidden sm:block"></div>
 
-            <!-- CARD 0: Versión 3.2 WorkManager & Hora Local -->
+            <!-- CARD 0: Versión 3.3 Gráfica de Tendencia Térmica & Sincronización -->
             <div class="relative sm:pl-16">
                 <!-- Circular Icon Pin -->
                 <div class="absolute left-3 sm:left-3.5 top-0 w-6 h-6 rounded-full bg-brand-darker border-4 border-[#00F2FE] shadow-md z-10 hidden sm:block"></div>
                 <div class="bg-slate-900/90 border border-[#00F2FE]/40 rounded-3xl p-6 sm:p-8 glow-border transition-colors">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-brand-teal uppercase font-mono">Módulo Principal: Versión 3.2</span>
+                        <span class="text-xs font-bold text-brand-teal uppercase font-mono">Módulo Principal: Versión 3.3</span>
                         <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">ÚLTIMO RELEASE</span>
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-3 flex items-center gap-3">
+                        📊 Gráfica de Tendencia Térmica de 24 Horas & Sincronización Térmica
+                    </h3>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
+                        Se ha incorporado un componente de visualización meteorológica avanzada de última generación directamente en la pantalla principal de Jetpack Compose:
+                    </p>
+                    <ul class="space-y-3 text-xs sm:text-sm text-slate-300 list-none pl-0">
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Gráfica Vectorial Interactiva de Tendencia (<code class="bg-slate-800 px-1.5 py-0.5 rounded text-brand-teal font-mono">TemperatureTrendChart</code>):</strong> Lienzo interactivo en Compose (`Canvas`) que traza curvas bézier suaves con degradado cian, líneas de referencia discontinuas y marcadores térmicos máximos/mínimos.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Gestos Táctiles y Tarjeta Flotante (`Tooltip`):</strong> Respuesta inmediata a gestos de arrastre o toque (`pointerInput`), mostrando en vivo un cuadro emergente con el icono animado del clima, horario, probabilidad de lluvia (💧) y descripción traducida.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Sincronización Térmica de Estado Actual y Pronóstico:</strong> Garantiza alineación 100% exacta entre la temperatura actual de la ciudad y el bloque <strong class="text-[#00F2FE]">"Ahora"</strong> del pronóstico de 24 horas y la gráfica de tendencia.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Reestructuración Limpia de Paquetes (<code class="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono">com.aura</code>):</strong> Migración completa del namespace de la aplicación a `com.aura`, optimizando el código fuente, la base de datos Room, los casos de uso domain y los Workers.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CARD 1: Versión 3.2 WorkManager & Hora Local -->
+            <div class="relative sm:pl-16">
+                <!-- Circular Icon Pin -->
+                <div class="absolute left-3 sm:left-3.5 top-0 w-6 h-6 rounded-full bg-brand-darker border-4 border-cyan-400 shadow-md z-10 hidden sm:block"></div>
+                <div class="bg-slate-900/70 border border-slate-800/80 rounded-3xl p-6 sm:p-8 hover:border-cyan-500/40 transition-colors">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-500 uppercase font-mono">Versión 3.2: Tareas & Hora Local</span>
                     </div>
                     <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-3 flex items-center gap-3">
                         ⏰ Tareas Programadas (WorkManager) & Hora Local por Ubicación

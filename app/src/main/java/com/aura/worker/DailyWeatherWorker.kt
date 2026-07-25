@@ -1,4 +1,4 @@
-package com.example.worker
+package com.aura.worker
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -19,10 +19,10 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.example.MainActivity
-import com.example.R
-import com.example.data.api.WeatherApiClients
-import com.example.ui.weather.WeatherInfoHelper
+import com.aura.MainActivity
+import com.aura.R
+import com.aura.data.api.WeatherApiClients
+import com.aura.ui.weather.WeatherInfoHelper
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine

@@ -8,55 +8,55 @@ La aplicación se destaca por su capacidad de autoubicación en tiempo real, sin
 
 ## 🎨 Características Destacadas
 
-### 1. 🌙 Tema Oscuro Global Elegante (Versión 3.0)
+### 1. 📊 Gráfica Interactiva de Tendencia Térmica 24h en Compose (Versión 3.3)
+* **Gráfica Vectorial Interactiva (`TemperatureTrendChart`):** Curva suave de Bezier dibujada directamente sobre un lienzo de `Canvas` en Jetpack Compose con degradado de color cian neón.
+* **Gestos Táctiles y Deslizamiento:** Soporte para gestos de toque y arrastre (`pointerInput`) sobre la gráfica, permitiendo al usuario explorar la temperatura hora por hora.
+* **Tarjeta Flotante de Detalle (`Tooltip`):** Al presionar o arrastrar el dedo por la gráfica, se despliega una tarjeta dinámica con el icono animado del estado del clima, la probabilidad de lluvia (💧), el horario exacto y la descripción traducida.
+
+### 2. 🎯 Sincronización Térmica Exacta de Estado Actual y Pronóstico (Versión 3.3)
+* Corrección y alineación estricta del estado térmico: La temperatura actual en tiempo real y el código de condición meteorológica de la cabecera principal coinciden exactamente con el primer elemento (**"Ahora"**) de la carrusel horaria de 24 horas y de la gráfica de tendencia térmica.
+
+### 3. ⏰ Tareas Programadas (WorkManager) & Hora Local por Ubicación (Versión 3.2)
+* **Resumen Matutino Automático (`DailyWeatherWorker`):** Trabajo periódico en segundo plano que envía cada mañana (07:30 AM) una notificación enriquecida con el pronóstico del día y alertas de la ubicación actual.
+* **Hora y Fecha Local Internacional:** Detección de zona horaria y cálculo dinámico de la hora local exacta según la ubicación buscada (ej: Tokio, París, Buenos Aires).
+
+### 4. 🌙 Tema Oscuro Global Elegante (Versión 3.0)
 * Adopción global de una paleta de noche profunda (Deep Night Slate `#0B1120`, `DarkSurface` `#151D30`, `DarkPrimary` `#38BDF8`), contraste elevado y gradientes atmosféricos dinámicos en Jetpack Compose.
 * Experiencia visual fluida y consistente en todas las tarjetas de información, métricas horarias y pantallas de la aplicación.
 
-### 2. 🔒 Endurecimiento de Seguridad y Privacidad (allowBackup="false")
+### 5. 🔒 Endurecimiento de Seguridad y Privacidad (allowBackup="false")
 * Desactivación de respaldos automáticos en el manifiesto de Android para proteger la privacidad local del usuario ante posibles extracciones no autorizadas en nubes de terceros o mediante depuración adb.
 
-### 3. ⚡ Hilos Asíncronos (Dispatchers.IO) y Tiempos de Red
+### 6. ⚡ Hilos Asíncronos (Dispatchers.IO) y Tiempos de Red
 * Ejecución de tareas de geocodificación inversa en hilos de entrada/salida (`Dispatchers.IO`) para garantizar fluidez total de la interfaz de usuario sin bloqueos.
 * Políticas de conexión seguras en Retrofit/OkHttp con timeouts de 15 segundos para máxima resistencia ante redes inestables.
 
-### 4. 📍 Autoubicación mediante GPS de Alta Precisión
+### 7. 📍 Autoubicación mediante GPS de Alta Precisión
 * Aura utiliza **Google Play Services Location API** para adquirir de forma automática las coordenadas del dispositivo en tiempo real.
 * A través de un servicio integrado de **Reverse Geocoding (Geocoder de Android)**, traduce la latitud y longitud físicas a una ciudad legible con su correspondiente estado/provincia y país.
 * Ofrece un botón flotante de acceso directo en la barra de búsqueda para refrescar la ubicación en cualquier momento.
 
-### 2. 🕒 Visualización de la Hora Local Dinámica
+### 8. 🕒 Visualización de la Hora Local Dinámica
 * El dashboard principal muestra un reloj adaptado a la franja horaria local en tiempo real con un formato elegante e intuitivo: `Lunes, 25 de Mayo • 02:43`.
 * El reloj se actualiza automáticamente respetando la configuración regional y el huso horario detectado.
 
-### 3. 🌗 Consciencia de Ciclos Día/Noche
+### 9. 🌗 Consciencia de Ciclos Día/Noche
 * Aura integra un sistema que descifra si es de **día** o de **noche** basándose en la hora local actual del punto seleccionado y el estado de la API solar.
 * Dependiendo de la fase del día, la interfaz completa cambia su paleta de gradientes dinámicos de fondo (brillando en tonos diurnos de azul cielo o atenuándose a azules estelares profundos).
 * Los elementos gráficos del clima cambian inteligentemente: el sol radiante de los iconos del clima pasa a ser una luna menguante detallada rodeada de estrellas titilantes durante las horas nocturnas correspondientes.
 
-### 4. 📅 Pronóstico de las Próximas 24 Horas Sincronizado
-* La sección horaria ya no empieza desde valores genéricos o arbitrarios o del inicio de los días calendarios del API. En Aura se calibra en tiempo real **empezando exactamente desde la hora actual del dispositivo**, mostrando las siguientes 24 horas continuas de pronóstico térmico con sus iconos de día/noche correspondientes.
-
-### 5. 🔍 Búsqueda con Autocompletado e Historial
+### 10. 🔍 Búsqueda con Autocompletado e Historial
 * Una potente barra de búsqueda que implementa llamadas asíncronas de geocodificación espacial. Al teclear unas letras, una lista superpuesta de resultados autocompletados te permitirá viajar a cualquier rincón meteorológico del planeta.
 
-### 6. 💖 Gestión de Favoritos Persistente (Room)
+### 11. 💖 Gestión de Favoritos Persistente (Room)
 * Soporte nativo para almacenar tus ciudades preferidas en una base de datos interna **SQLite** a través de **Room**.
 * Puedes marcar con un solo botón de estrella tus ciudades de consulta frecuente para cargarlas de forma instantánea de forma offline o en futuros arranques.
 
-### 7. 🌡️ Conversión de Unidades al Instante
+### 12. 🌡️ Conversión de Unidades al Instante
 * Conversión termodinámica instantánea entre grados **Celsius (°C)** y **Fahrenheit (°F)** presionando un solo botón en los detalles térmicos, propagándose a todos los paneles y tarjetas horarias de la pantalla.
 
-### 8. 🌌 Widget Climatológico Translúcido (Glassmorphism)
+### 13. 🌌 Widget Climatológico Translúcido (Glassmorphism)
 * El fondo del widget de Aura para la pantalla de inicio de Android ahora adopta un diseño moderno de **vidrio esmerilado translúcido** con un borde cian neón interactivo, integrándose estéticamente con cualquier fondo de pantalla de tu dispositivo.
-
-### 9. 🎬 Carrusel Animado (ViewFlipper Nativo)
-* Transiciones suaves animadas mediante desvanecimiento que se ejecutan automáticamente cada 3 segundos, rotando de forma fluida entre estadísticas del clima real (temperatura actual, lluvia) y recomendaciones contextuales inteligentes según el estado climatológico.
-
-### 10. 🚨 Alertas Climáticas Proactivas en el Widget
-* Monitoreo prioritario nativo de peligros ambientales sutiles (tales como olas de calor/frío extremas, radiación UV alta, fuertes de viento o tormentas). El widget se viste opcionalmente de rojo de alerta extrema o naranja de advertencia crítica para alertar al usuario proactivamente.
-
-### 11. 📈 Gráfica de Tendencia Térmica NATIVA de 24 Horas
-* El widget dibuja en tiempo real una **gráfica de líneas fluida con un lienzo vectorizado (`Canvas` nativo)** mostrando la progresión térmica continua de las próximas 24 horas. Cuenta con un relleno de degradado cian que se difumina hacia las bases y señalizaciones legibles de las temperaturas máximas y mínimas calculadas.
 
 ---
 
@@ -65,23 +65,32 @@ La aplicación se destaca por su capacidad de autoubicación en tiempo real, sin
 La aplicación sigue fielmente el patrón de diseño arquitectónico **MVVM (Model - View - ViewModel)** combinado con los principios de desarrollo limpio (**Clean Architecture**):
 
 ```text
-/app/src/main/java/com/example
+/app/src/main/java/com/aura
 │
 ├── MainActivity.kt                 # Punto de entrada de la app, gestiona insets edge-to-edge
+├── AuraApplication.kt              # Clase de aplicación para inicialización global y WorkManager
 │
 ├── data
 │   ├── api
-│   │   ├── GeocodingResponse.kt    # Data Transfer Objects (DTO) para geocodificación
+│   │   ├── GeocodingResult.kt      # Data Transfer Objects (DTO) para geocodificación
 │   │   ├── WeatherApiService.kt    # Definición de endpoints de Retrofit para Open-Meteo
-│   │   └── WeatherResponse.kt      # Modelado exhaustivo de respuestas horarias e históricas
+│   │   └── WeatherModels.kt        # Modelado exhaustivo de respuestas horarias e históricas
 │   │
 │   ├── db
 │   │   ├── ClimaDatabase.kt        # Entidad gestora de Room (SQLite database)
 │   │   ├── FavoriteLocation.kt     # Definición de tabla de ubicaciones favoritas
-│   │   └── LocationDao.kt          # Objeto de acceso a datos (DAO) para queries de CRUD
+│   │   └── FavoriteDao.kt          # Objeto de acceso a datos (DAO) para queries de CRUD
 │   │
 │   └── repository
-│       └── WeatherRepository.kt    # Fuente única de verdad, sincroniza datos de red y locales
+│       └── WeatherRepositoryImpl.kt # Fuente única de verdad, sincroniza datos de red y locales
+│
+├── domain
+│   ├── model                       # Modelos de dominio limpios desacoplados de DTOs
+│   ├── repository                  # Interfaz IWeatherRepository
+│   └── usecase                     # Casos de uso de negocio (Search, GetWeather, Favorites, GPS)
+│
+├── worker
+│   └── DailyWeatherWorker.kt       # WorkManager para notificaciones matutinas periódicas
 │
 └── ui
     ├── theme
@@ -90,8 +99,10 @@ La aplicación sigue fielmente el patrón de diseño arquitectónico **MVVM (Mod
     │   └── Type.kt                 # Fórmulas de escala tipográfica adaptativas
     │
     └── weather
-        ├── WeatherDashboardScreen.kt  # Pantalla principal (Compose UI: widgets, forecast, Search)
-        └── WeatherViewModel.kt        # Gestor de estados de UI usando StateFlow y Corutinas
+        ├── WeatherDashboardScreen.kt # Pantalla principal (Compose UI)
+        ├── TemperatureTrendChart.kt  # Gráfica interactiva de tendencia térmica 24h
+        ├── WeatherAppWidgetProvider.kt # Widget climatológico para pantalla de inicio
+        └── WeatherViewModel.kt       # Gestor de estados de UI usando StateFlow y Corutinas
 ```
 
 ---

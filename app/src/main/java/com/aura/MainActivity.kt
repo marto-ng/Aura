@@ -1,4 +1,4 @@
-package com.example
+package com.aura
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -14,10 +14,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.ui.theme.MyApplicationTheme
-import com.example.ui.weather.WeatherDashboardScreen
-import com.example.ui.weather.WeatherViewModel
-import com.example.worker.DailyWeatherWorker
+import com.aura.ui.theme.MyApplicationTheme
+import com.aura.ui.weather.WeatherDashboardScreen
+import com.aura.ui.weather.WeatherViewModel
+import com.aura.worker.DailyWeatherWorker
 
 class MainActivity : ComponentActivity() {
 
@@ -47,7 +47,10 @@ class MainActivity : ComponentActivity() {
 
     setContent {
       MyApplicationTheme {
-        val viewModel: WeatherViewModel = viewModel()
+        val appContainer = (application as AuraApplication).container
+        val viewModel: WeatherViewModel = viewModel(
+            factory = WeatherViewModel.provideFactory(appContainer)
+        )
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
           WeatherDashboardScreen(
               viewModel = viewModel,
