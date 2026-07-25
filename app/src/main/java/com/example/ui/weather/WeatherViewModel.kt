@@ -199,6 +199,8 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             
             prefs.edit().apply {
                 putString("city_name", cityName)
+                putFloat("latitude", weatherData.latitude.toFloat())
+                putFloat("longitude", weatherData.longitude.toFloat())
                 putFloat("temperature", currentTemp.toFloat())
                 putInt("weather_code", weatherCode)
                 putInt("rain_probability", rainProb)

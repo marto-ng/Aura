@@ -64,11 +64,11 @@
         <div class="text-center mb-16 relative">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 bg-brand-teal/10 rounded-full blur-[100px] pointer-events-none"></div>
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-teal/10 text-brand-teal border border-brand-teal/20 mb-4 uppercase tracking-widest">
-                VERSIÓN 3.0 (ÚLTIMA ACTUALIZACIÓN)
+                VERSIÓN 3.2 (ÚLTIMA ACTUALIZACIÓN)
             </span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight">Notas de <span class="gradient-text">Actualización v3.0</span></h1>
+            <h1 class="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight">Notas de <span class="gradient-text">Actualización v3.2</span></h1>
             <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
-                Descubre las potentes mejoras incorporadas en el ecosistema adaptativo de Aura: Tema oscuro global unificado, endurecimiento de seguridad en respaldos y optimización asíncrona de alto rendimiento.
+                Descubre las potentes mejoras de Aura: Tareas programadas en segundo plano con WorkManager para notificaciones matutinas, cálculo automático de hora/zona horaria local según la ubicación buscada, tema oscuro unificado y seguridad avanzada.
             </p>
         </div>
 
@@ -77,15 +77,43 @@
             <!-- Vertical Line Connecting Steps -->
             <div class="absolute left-6 top-6 bottom-6 w-0.5 bg-slate-800/80 hidden sm:block"></div>
 
-            <!-- CARD 0: Tema Oscuro Global & Seguridad v3.0 -->
+            <!-- CARD 0: Versión 3.2 WorkManager & Hora Local -->
             <div class="relative sm:pl-16">
                 <!-- Circular Icon Pin -->
                 <div class="absolute left-3 sm:left-3.5 top-0 w-6 h-6 rounded-full bg-brand-darker border-4 border-[#00F2FE] shadow-md z-10 hidden sm:block"></div>
                 <div class="bg-slate-900/90 border border-[#00F2FE]/40 rounded-3xl p-6 sm:p-8 glow-border transition-colors">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-bold text-brand-teal uppercase font-mono">Módulo Principal: Versión 3.0</span>
+                        <span class="text-xs font-bold text-brand-teal uppercase font-mono">Módulo Principal: Versión 3.2</span>
                         <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">ÚLTIMO RELEASE</span>
                     </div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-3 flex items-center gap-3">
+                        ⏰ Tareas Programadas (WorkManager) & Hora Local por Ubicación
+                    </h3>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
+                        Se ha implementado un sistema inteligente de notificaciones diarias programadas y sincronización horaria internacional precisa:
+                    </p>
+                    <ul class="space-y-3 text-xs sm:text-sm text-slate-300 list-none pl-0">
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Resumen Matutino con WorkManager (<code class="bg-slate-800 px-1.5 py-0.5 rounded text-brand-teal font-mono">DailyWeatherWorker</code>):</strong> Programación periódica en segundo plano que envía cada mañana (07:30 AM) un resumen detallado con la temperatura actual, rango del día, probabilidad de lluvia, velocidad del viento y alertas de la ubicación actual del usuario. Incluye canal de notificaciones nativo de Android y botón de prueba instantánea.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Hora y Fecha Local Sincronizada (<code class="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono">TimeZone / UTC Offset</code>):</strong> Al buscar o seleccionar cualquier ubicación global (ej: Tokio, París, Buenos Aires), Aura detecta su zona horaria exacta y muestra en tiempo real la fecha y hora local correspondiente en la cabecera.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Pronóstico de 24 Horas Ajustado a la Hora Local:</strong> El carrusel interactivo de pronóstico se alinea con la hora local actual de la ciudad consultada, destacando el bloque inicial con la etiqueta fluorescente <strong class="text-[#00F2FE]">"Ahora"</strong>.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CARD 1: Tema Oscuro Global & Seguridad v3.0 -->
+            <div class="relative sm:pl-16">
+                <div class="absolute left-3 sm:left-3.5 top-0 w-6 h-6 rounded-full bg-brand-darker border-4 border-cyan-400 shadow-md z-10 hidden sm:block"></div>
+                <div class="bg-slate-900/70 border border-slate-800/80 rounded-3xl p-6 sm:p-8 hover:border-cyan-500/40 transition-colors">
+                    <span class="text-xs font-bold text-slate-500 uppercase font-mono block mb-2">Versión 3.0: Arquitectura & Seguridad</span>
                     <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-3 flex items-center gap-3">
                         🌙 Tema Oscuro Global & Endurecimiento de Seguridad
                     </h3>

@@ -41,6 +41,7 @@ import com.example.data.api.GeocodingResult
 import com.example.data.api.HourlyWeather
 import com.example.data.api.WeatherResponse
 import com.example.data.db.FavoriteLocation
+import com.example.worker.DailyWeatherWorker
 import java_text_SimpleDateFormat_compatibility.getDayOfWeekSpanish
 
 @Composable
@@ -871,6 +872,88 @@ fun WeatherDashboardScreen(
                                         subtitle = "Atardecer: $sunsetTime",
                                         modifier = Modifier.weight(1f)
                                     )
+                                }
+                                Spacer(modifier = Modifier.height(16.dp))
+
+                                // Card for WorkManager Daily Notification Summary
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .testTag("work_manager_summary_card"),
+                                    shape = RoundedCornerShape(20.dp),
+                                    colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.12f)),
+                                    border = BorderStroke(1.dp, Color(0xFF00F2FE).copy(alpha = 0.35f))
+                                ) {
+                                    Column(modifier = Modifier.padding(16.dp)) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Notifications,
+                                                    contentDescription = "Notificación Diaria",
+                                                    tint = Color(0xFF00F2FE),
+                                                    modifier = Modifier.size(20.dp)
+                                                )
+                                                Spacer(modifier = Modifier.width(8.dp))
+                                                Text(
+                                                    text = "Resumen Matutino (WorkManager)",
+                                                    style = MaterialTheme.typography.titleSmall,
+                                                    color = Color.White,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            }
+                                            Surface(
+                                                color = Color(0xFF10B981).copy(alpha = 0.2f),
+                                                shape = RoundedCornerShape(12.dp),
+                                                border = BorderStroke(1.dp, Color(0xFF10B981).copy(alpha = 0.4f))
+                                            ) {
+                                                Text(
+                                                    text = "PROGRAMADO ⏰ 07:30 AM",
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = Color(0xFF34D399),
+                                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            }
+                                        }
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        Text(
+                                            text = "WorkManager enviará una notificación automática cada mañana con el resumen climático de ${currentLocation.name}.",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = Color.White.copy(alpha = 0.85f)
+                                        )
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                        val context = LocalContext.current
+                                        var notificationTriggered by remember { mutableStateOf(false) }
+                                        Button(
+                                            onClick = {
+                                                DailyWeatherWorker.triggerImmediateTest(context)
+                                                notificationTriggered = true
+                                            },
+                                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00F2FE)),
+                                            shape = RoundedCornerShape(12.dp),
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .testTag("test_notification_btn")
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Send,
+                                                contentDescription = null,
+                                                tint = Color(0xFF0F172A),
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = if (notificationTriggered) "¡Notificación enviada en segundo plano!" else "Probar resumen matutino ahora",
+                                                color = Color(0xFF0F172A),
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 13.sp
+                                            )
+                                        }
+                                    }
                                 }
                                 Spacer(modifier = Modifier.height(32.dp))
                             }
