@@ -96,16 +96,34 @@ fun WeatherDashboardScreen(
         }
     }
 
-    // Present localized time state
+    // Present localized time state calculated according to searched location's timezone
+    val successWeather = (weatherState as? WeatherUiState.Success)?.weather
+    val locationTimeZone = remember(successWeather?.timezone, successWeather?.utcOffsetSeconds) {
+        val tzId = successWeather?.timezone
+        val offsetSec = successWeather?.utcOffsetSeconds
+        if (!tzId.isNullOrBlank()) {
+            java.util.TimeZone.getTimeZone(tzId)
+        } else if (offsetSec != null) {
+            val offsetMs = offsetSec * 1000
+            val sign = if (offsetMs >= 0) "+" else "-"
+            val hours = Math.abs(offsetMs) / (3600 * 1000)
+            val mins = (Math.abs(offsetMs) % (3600 * 1000)) / (60 * 1000)
+            java.util.TimeZone.getTimeZone(String.format(java.util.Locale.US, "GMT%s%02d:%02d", sign, hours, mins))
+        } else {
+            java.util.TimeZone.getDefault()
+        }
+    }
+
     val currentTimeState = remember { mutableStateOf("") }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(locationTimeZone) {
         while (true) {
             val sdf = java.text.SimpleDateFormat("EEEE, d 'de' MMMM • HH:mm", java.util.Locale("es", "ES"))
+            sdf.timeZone = locationTimeZone
             val formatted = sdf.format(java.util.Date()).replaceFirstChar { 
-                if (it.isLowerCase()) it.titlecase(java.util.Locale.getDefault()) else it.toString() 
+                if (it.isLowerCase()) it.titlecase(java.util.Locale("es", "ES")) else it.toString() 
             }
             currentTimeState.value = formatted
-            kotlinx.coroutines.delay(10000)
+            kotlinx.coroutines.delay(1000)
         }
     }
 
@@ -474,12 +492,24 @@ fun WeatherDashboardScreen(
                                         color = Color.White.copy(alpha = 0.75f)
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = currentTimeState.value,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = Color.White.copy(alpha = 0.9f),
-                                        fontWeight = FontWeight.SemiBold
-                                    )
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(top = 2.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.DateRange,
+                                            contentDescription = "Hora local de la ubicación",
+                                            tint = Color(0xFF00F2FE),
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = currentTimeState.value,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = Color.White.copy(alpha = 0.95f),
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    }
                                 }
 
                                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -615,20 +645,36 @@ fun WeatherDashboardScreen(
 
                         // Hourly carousel for next 24 Hours
                         item {
-                            Text(
-                                text = "Próximas 24 Horas",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = "Pronóstico 24 Horas",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "Hora local de la ciudad",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color.White.copy(alpha = 0.6f)
+                                )
+                            }
                             Spacer(modifier = Modifier.height(8.dp))
 
                             state.weather.hourly?.let { hourly ->
-                                val indices = remember(hourly.time) {
+                                val indices = remember(hourly.time, locationTimeZone) {
                                     try {
-                                        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:00", java.util.Locale.US)
-                                        val currentHourStr = sdf.format(java.util.Date())
-                                        val startIdx = hourly.time.indexOfFirst { it.startsWith(currentHourStr.substring(0, 13)) }
+                                        val hourSdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:00", java.util.Locale.US).apply {
+                                            this.timeZone = locationTimeZone
+                                        }
+                                        val currentLocalHourStr = hourSdf.format(java.util.Date())
+                                        var startIdx = hourly.time.indexOfFirst { it.startsWith(currentLocalHourStr.substring(0, 13)) }
+                                        if (startIdx == -1) {
+                                            startIdx = hourly.time.indexOfFirst { it >= currentLocalHourStr }
+                                        }
                                         val startIndexVal = if (startIdx != -1) startIdx else 0
                                         (startIndexVal until (startIndexVal + 24).coerceAtMost(hourly.time.size)).toList()
                                     } catch (e: Exception) {
@@ -640,6 +686,7 @@ fun WeatherDashboardScreen(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     items(indices) { index ->
+                                        val isCurrentHourItem = index == indices.firstOrNull()
                                         val timeStr = hourly.time.getOrNull(index) ?: ""
                                         val temp = hourly.temperature2m.getOrNull(index) ?: 0.0
                                         val prob = hourly.precipitationProbability.getOrNull(index) ?: 0
@@ -653,9 +700,12 @@ fun WeatherDashboardScreen(
                                         }
 
                                         Card(
-                                            modifier = Modifier.width(76.dp),
+                                            modifier = Modifier.width(78.dp),
                                             shape = RoundedCornerShape(16.dp),
-                                            colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.12f))
+                                            colors = CardDefaults.cardColors(
+                                                containerColor = if (isCurrentHourItem) Color.White.copy(alpha = 0.28f) else Color.White.copy(alpha = 0.12f)
+                                            ),
+                                            border = if (isCurrentHourItem) BorderStroke(1.5.dp, Color(0xFF00F2FE)) else null
                                         ) {
                                             Column(
                                                 modifier = Modifier
@@ -664,9 +714,10 @@ fun WeatherDashboardScreen(
                                                 horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
                                                 Text(
-                                                    text = formatHour(timeStr),
+                                                    text = if (isCurrentHourItem) "Ahora" else formatHour(timeStr),
                                                     style = MaterialTheme.typography.labelMedium,
-                                                    color = Color.White.copy(alpha = 0.7f)
+                                                    fontWeight = if (isCurrentHourItem) FontWeight.ExtraBold else FontWeight.Medium,
+                                                    color = if (isCurrentHourItem) Color(0xFF00F2FE) else Color.White.copy(alpha = 0.8f)
                                                 )
                                                 Spacer(modifier = Modifier.height(8.dp))
                                                 WeatherConditionGraphic(
