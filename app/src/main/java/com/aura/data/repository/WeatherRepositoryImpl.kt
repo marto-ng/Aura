@@ -100,11 +100,22 @@ class WeatherRepositoryImpl(
             val prefs = context.getSharedPreferences("weather_widget_prefs", Context.MODE_PRIVATE)
             val currentTemp = weatherData.current?.temperature2m ?: 22.0
             val weatherCode = weatherData.current?.weatherCode ?: 0
-            val rainProb = weatherData.hourly?.precipitationProbability?.firstOrNull() ?: 15
+            val hourly = weatherData.hourly
+            val currentHourIndex = if (hourly != null) {
+                try {
+                    val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:00", java.util.Locale.US)
+                    val currentHourStr = sdf.format(java.util.Date())
+                    val startIdx = hourly.time.indexOfFirst { it.startsWith(currentHourStr.substring(0, 13)) }
+                    if (startIdx != -1) startIdx else 0
+                } catch (e: Exception) {
+                    0
+                }
+            } else 0
+            val rainProb = hourly?.precipitationProbability?.getOrNull(currentHourIndex)
+                ?: hourly?.precipitationProbability?.firstOrNull()
+                ?: 0
             val windSpeed = weatherData.current?.windSpeed10m ?: 0.0
             val uvIndex = weatherData.current?.uvIndex ?: 0.0
-
-            val hourly = weatherData.hourly
             val trendString = if (hourly != null) {
                 try {
                     val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:00", java.util.Locale.US)

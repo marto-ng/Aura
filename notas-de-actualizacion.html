@@ -68,7 +68,7 @@
             </span>
             <h1 class="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight">Notas de <span class="gradient-text">Actualización v3.3</span></h1>
             <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
-                Descubre las potentes mejoras de Aura: Gráfica interactiva de tendencia térmica de 24 horas con gestos táctiles en Jetpack Compose, gestión avanzada de errores con mensajes amigables y botón de rescate, notificaciones Snackbar, sincronización térmica exacta y arquitectura limpia con paquetes com.aura.
+                Descubre las potentes mejoras de Aura: Cálculo dinámico de certidumbre y probabilidad de ocurrencia (80%-99%) en el pronóstico de 7 días, métricas ampliadas de nubosidad, precipitación y viento cardinal, gráfica interactiva 24h con gestos en Jetpack Compose, tolerancia inteligente a errores y diseño simplificado.
             </p>
         </div>
 
@@ -87,12 +87,24 @@
                         <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">ÚLTIMO RELEASE</span>
                     </div>
                     <h3 class="text-xl sm:text-2xl font-bold text-slate-100 mb-3 flex items-center gap-3">
-                        📊 Gráfica de Tendencia Térmica de 24 Horas & Sincronización Térmica
+                        📊 Gráfica de Tendencia Térmica 24h, Probabilidad de Ocurrencia 7D & Métricas
                     </h3>
                     <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
-                        Se ha incorporado un componente de visualización meteorológica avanzada de última generación directamente en la pantalla principal de Jetpack Compose:
+                        Se ha incorporado una importante suite de mejoras de visualización y análisis meteorológico en la pantalla principal de Jetpack Compose:
                     </p>
                     <ul class="space-y-3 text-xs sm:text-sm text-slate-300 list-none pl-0">
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Cálculo Dinámico de Probabilidad de Ocurrencia (Pronóstico de 7 Días):</strong> Algoritmo de certidumbre que asigna una probabilidad porcentual real (80% - 99%) para cada día del pronóstico de 7 días según las variables del clima de la ciudad (estabilidad atmosférica WMO, lluvia, ráfagas de viento y variaciones térmicas).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Métricas Meteorológicas Ampliadas & Rosa de los Vientos:</strong> Nuevas tarjetas métricas para la cobertura de **Nubosidad** (%), **Precipitación** por hora (mm) y dirección del viento traducida dinámicamente a direcciones cardinales (ej. `180° (S)`, `45° (NE)`).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-teal font-bold text-base">•</span>
+                            <span><strong>Diseño Limpio y Optimización de Cabecera:</strong> Eliminación de lecturas térmicas duplicadas en la zona superior para mantener una vista sobria, despejada y centrada en la gráfica de 24h y tendencias.</span>
+                        </li>
                         <li class="flex items-start gap-2">
                             <span class="text-brand-teal font-bold text-base">•</span>
                             <span><strong>Gráfica Vectorial Interactiva de Tendencia (<code class="bg-slate-800 px-1.5 py-0.5 rounded text-brand-teal font-mono">TemperatureTrendChart</code>):</strong> Lienzo interactivo en Compose (`Canvas`) que traza curvas bézier suaves con degradado cian, líneas de referencia discontinuas y marcadores térmicos máximos/mínimos.</span>
@@ -112,10 +124,6 @@
                         <li class="flex items-start gap-2">
                             <span class="text-brand-teal font-bold text-base">•</span>
                             <span><strong>Notificaciones Snackbar & Retroalimentación de Búsqueda:</strong> Mensajes flotantes de confirmación al agregar/eliminar ciudades en Favoritos (⭐) o actualizar GPS (📍), junto con alertas explícitas si la búsqueda no arroja resultados.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-teal font-bold text-base">•</span>
-                            <span><strong>Reestructuración Limpia de Paquetes (<code class="bg-slate-800 px-1.5 py-0.5 rounded text-amber-400 font-mono">com.aura</code>):</strong> Migración completa del namespace de la aplicación a `com.aura`, optimizando el código fuente, la base de datos Room, los casos de uso domain y los Workers.</span>
                         </li>
                     </ul>
                 </div>

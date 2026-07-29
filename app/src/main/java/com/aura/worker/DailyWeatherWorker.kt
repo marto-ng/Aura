@@ -71,7 +71,19 @@ class DailyWeatherWorker(
             val currentTemp = weather.current?.temperature2m ?: 20.0
             val weatherCode = weather.current?.weatherCode ?: 0
             val windSpeed = weather.current?.windSpeed10m ?: 0.0
-            val rainProb = weather.hourly?.precipitationProbability?.firstOrNull() ?: 0
+            val currentHourIndex = if (weather.hourly != null) {
+                try {
+                    val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:00", java.util.Locale.US)
+                    val currentHourStr = sdf.format(java.util.Date())
+                    val startIdx = weather.hourly.time.indexOfFirst { it.startsWith(currentHourStr.substring(0, 13)) }
+                    if (startIdx != -1) startIdx else 0
+                } catch (e: Exception) {
+                    0
+                }
+            } else 0
+            val rainProb = weather.hourly?.precipitationProbability?.getOrNull(currentHourIndex)
+                ?: weather.hourly?.precipitationProbability?.firstOrNull()
+                ?: 0
             val maxTemp = weather.daily?.temperature2mMax?.firstOrNull() ?: (currentTemp + 4.0)
             val minTemp = weather.daily?.temperature2mMin?.firstOrNull() ?: (currentTemp - 3.0)
 

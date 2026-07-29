@@ -13,10 +13,22 @@ La aplicación se destaca por su capacidad de autoubicación en tiempo real, sin
 * **Gestos Táctiles y Deslizamiento:** Soporte para gestos de toque y arrastre (`pointerInput`) sobre la gráfica, permitiendo al usuario explorar la temperatura hora por hora.
 * **Tarjeta Flotante de Detalle (`Tooltip`):** Al presionar o arrastrar el dedo por la gráfica, se despliega una tarjeta dinámica con el icono animado del estado del clima, la probabilidad de lluvia (💧), el horario exacto y la descripción traducida.
 
-### 2. 🎯 Sincronización Térmica Exacta de Estado Actual y Pronóstico (Versión 3.3)
-* Corrección y alineación estricta del estado térmico: La temperatura actual en tiempo real y el código de condición meteorológica de la cabecera principal coinciden exactamente con el primer elemento (**"Ahora"**) de la carrusel horaria de 24 horas y de la gráfica de tendencia térmica.
+### 2. 🔮 Probabilidad de Ocurrencia del Pronóstico de 7 Días (Versión 3.3)
+* **Motor Dinámico de Certidumbre:** Algoritmo que calcula dinámicamente el porcentaje de probabilidad de ocurrencia (entre 80% y 99%) para cada día del pronóstico de 7 días según los datos específicos de la ciudad.
+* **Variables Meteorológicas Integradas:** Pondera la degradación natural por horizonte temporal, códigos meteorológicos WMO (cielos estables vs. tormentas), probabilidad de precipitación, velocidad del viento y amplitud térmica diaria.
+* **Insignia y Lista Informativa:** Muestra el rango global de ocurrencia en la cabecera de la tarjeta (ej. `80% - 99% prob. ocurrencia`) y la probabilidad calculada por día individual.
 
-### 3. 🛡️ Manejo Inteligente de Errores & Botón de Rescate (Versión 3.3)
+### 3. 🌧️ Métricas Meteorológicas Ampliadas & Dirección del Viento (Versión 3.3)
+* **Nuevas Tarjetas de Métricas:** Incorporación de métricas de **Nubosidad** (% cobertura de nubes) y **Precipitación** (acumulada por hora en mm).
+* **Rosa de los Vientos Cardinal:** Dirección del viento enriquecida con grados sexagesimales e indicación cardinal dinámica (ej. `180° (S)`, `45° (NE)`).
+
+### 4. 🧹 Optimización Visual y Eliminación de Redundancias (Versión 3.3)
+* Limpieza del flujo visual en la cabecera eliminando lecturas térmicas duplicadas tras la fecha/hora, garantizando que el protagonismo recaiga en la gráfica interactiva de 24h y el pronóstico de 7 días.
+
+### 5. 🎯 Sincronización Térmica Exacta de Estado Actual y Pronóstico (Versión 3.3)
+* Corrección y alineación estricta del estado térmico: La temperatura actual en tiempo real y el código de condición meteorológica coinciden exactamente con el primer elemento (**"Ahora"**) del carrusel horaria de 24 horas y de la gráfica de tendencia térmica.
+
+### 6. 🛡️ Manejo Inteligente de Errores & Botón de Rescate (Versión 3.3)
 * **Traducción Amigable de Errores de Red:** Captura de excepciones HTTP/IO (`UnknownHostException`, `SocketTimeoutException`, `HttpException`) con interpretación automática en español para informar problemas de conectividad Wi-Fi/datos móviles o caídas del servidor.
 * **Tarjeta de Error & Botón de Rescate:** Tarjeta rediseñada en la interfaz principal que incluye botón de **Reintentar** y botón de rescate directo a **Madrid** para restablecer la aplicación en caso de falla de GPS o red.
 * **Notificaciones Snackbar:** Avisos interactivos flotantes al agregar/eliminar ubicaciones de favoritos y al sincronizar con el GPS.
@@ -62,7 +74,46 @@ La aplicación se destaca por su capacidad de autoubicación en tiempo real, sin
 * Conversión termodinámica instantánea entre grados **Celsius (°C)** y **Fahrenheit (°F)** presionando un solo botón en los detalles térmicos, propagándose a todos los paneles y tarjetas horarias de la pantalla.
 
 ### 13. 🌌 Widget Climatológico Translúcido (Glassmorphism)
-* El fondo del widget de Aura para la pantalla de inicio de Android ahora adopta un diseño moderno de **vidrio esmerilado translúcido** con un borde cian neón interactivo, integrándose estéticamente con cualquier fondo de pantalla de tu dispositivo.
+* El fondo del widget de Aura para la pantalla de inicio de Android ahora adopts un diseño moderno de **vidrio esmerilado translúcido** con un borde cian neón interactivo, integrándose estéticamente con cualquier fondo de pantalla de tu dispositivo.
+
+---
+
+## 📱 Guía Detallada de Interfaz de Usuario e Iconografía
+
+Aura implementa componentes interactivos desarrollados sobre Jetpack Compose y gráficos dibujados sobre lienzo `Canvas`. A continuación se detalla cada icono y su función correspondiente:
+
+### 🔍 Controles de Búsqueda y Navegación Superior
+* **🔍 Lupa (`Icons.Default.Search`):** Campo de entrada de texto. Al escribir 3 caracteres o más, despliega una lista flotante de sugerencias con geocodificación de ciudades en tiempo real.
+* **❌ Cruz (`Icons.Default.Close`):** Botón dinámico que borra instantáneamente el texto ingresado en la barra de búsqueda.
+* **📍 GPS / Ubicación (`Icons.Default.LocationOn`):** Solicita permisos dinámicos en Android y actualiza la ubicación y datos del tiempo utilizando el GPS del dispositivo.
+* **⭐ Estrella Dorada (`Icons.Default.Star`):** 
+  * En la cabecera: Agrega o elimina la ubicación actual de la base de datos local SQLite con Room.
+  * En la barra de favoritos: Representa un chip con acceso directo para cambiar a esa ubicación con un solo toque.
+
+### 📅 Cabecera de Hora Local e Indicador de Unidades
+* **📅 Calendario / Hora (`Icons.Default.DateRange`):** Muestra la fecha y la hora local exacta de la ciudad buscada, calculada respetando su zona horaria internacional.
+* **°C / °F Conmutador:** Botón selector para cambiar instantáneamente todas las lecturas térmicas de la aplicación entre Celsius y Fahrenheit.
+
+### 🎨 Catálogo de Gráficos y Símbolos Meteorológicos Vectoriales (`Canvas`)
+En lugar de recursos estáticos, la función `WeatherConditionGraphic` dibuja cada condición climática dinámicamente mediante vectores de Jetpack Compose Canvas:
+* **☀️ Sol Radiante (Día - Códigos 0, 1):** Círculo dorado central con rayos vectoriales expansivos para días despejados.
+* **🌙 Luna y Estrellas (Noche - Códigos 0, 1):** Luna creciente plateada rodeada de destellos estelares para noches despejadas.
+* **☁️ Nubes Acumulativas (Códigos 2, 3):** Estructura fluida de óvalos superpuestos para estados parcialmente nublados o cubiertos.
+* **🌫️ Capas de Niebla (Códigos 45, 48):** Franjas horizontales en degradado con bordes esmerilados para niebla y escarcha.
+* **🌧️ Nube con Lluvia (Códigos 51-67, 80-82):** Nube plomo acompañada de líneas de lluvia inclinadas en tono turquesa neón (`#80DEEA`).
+* **❄️ Copos de Nieve (Códigos 71-77, 85-86):** Nube blanca suave con copos circulares flotantes en la base.
+* **⚡ Tormenta Eléctrica (Códigos 95, 96, 99):** Nube de tormenta oscura atravesada por un rayo vectorial en zigzag amarillo brillante.
+
+### 📊 Tarjetas de Métricas Detalladas
+* **🌡️ Sensación Térmica:** Calcula la temperatura aparente experimentada por el cuerpo humano.
+* **💨 Viento:** Indica la velocidad del viento en km/h y su dirección exacta en grados sexagesimales.
+* **💧 Humedad Relativa:** Porcentaje de humedad contenida en la atmósfera.
+* **☔ Probabilidad de Lluvia:** Porcentaje de probabilidad máxima de precipitación proyectada.
+* **☀️ Índice UV:** Clasificación de intensidad de radiación solar ultravioleta (Bajo, Moderado, Alto, Extremo).
+* **🌅 Ciclo Solar:** Muestra la hora exacta del amanecer (orto) y atardecer (ocaso).
+* **🚨 Avisos de Emergencia (`Icons.Default.Warning`):** Banner rojo de alerta emergente para condiciones extremas (calor/frío severo, tormentas).
+* **🔔 Resumen Matutino (`Icons.Default.Notifications`):** Indica la programación periódica del WorkManager para las 07:30 AM. Incluye el botón **Send (🚀)** para simular y probar la notificación en segundo plano de manera inmediata.
+* **🏠 Botón de Rescate (`Icons.Default.Home`):** Restablece la app a la ubicación base de Madrid en caso de error de conexión.
 
 ---
 

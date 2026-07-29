@@ -57,6 +57,7 @@
             <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
                 <a href="#inicio" class="hover:text-brand-teal transition-colors">Inicio</a>
                 <a href="#caracteristicas" class="hover:text-brand-teal transition-colors">Características</a>
+                <a href="#interfaz" class="hover:text-brand-teal transition-colors">Interfaz & Iconos</a>
                 <a href="#arquitectura" class="hover:text-brand-teal transition-colors">Arquitectura</a>
                 <a href="#privacidad" class="hover:text-brand-teal transition-colors">Privacidad</a>
                 <a href="notas-de-actualizacion.html" class="px-3 py-1 bg-brand-teal/10 text-brand-teal border border-brand-teal/25 rounded-lg hover:bg-brand-teal/20 transition-colors text-xs font-bold font-mono">📢 Notas de Actualización</a>
@@ -84,6 +85,7 @@
             <a href="#inicio" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Inicio</a>
             <a href="notas-de-actualizacion.html" class="block py-2 px-3 rounded-xl bg-brand-teal/15 border border-brand-teal/30 text-brand-teal transition-colors font-semibold">📢 Notas de Actualización</a>
             <a href="#caracteristicas" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Características</a>
+            <a href="#interfaz" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Documentación de Interfaz & Iconos</a>
             <a href="#arquitectura" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Arquitectura</a>
             <a href="#privacidad" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Política de Privacidad</a>
             <a href="#descargar" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Instalación</a>
@@ -105,7 +107,7 @@
             <!-- Text Column -->
             <div class="lg:col-span-7 flex flex-col justify-center text-center lg:text-left">
                 <span class="inline-flex items-center gap-2 self-center lg:self-start px-3 py-1 rounded-full text-xs font-semibold bg-brand-teal/10 text-brand-teal border border-brand-teal/20 mb-6">
-                    ⚡ Versión 3.3: Gráfica Interactiva (24h), Sincronización Térmica & Tolerancia a Errores
+                    ⚡ Versión 3.3: Probabilidad 7D (80%-99%), Métricas Ampliadas & Gráfica 24h
                 </span>
                 <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
                     El Clima en Armonía con <span class="gradient-text">tu Ritmo</span>
@@ -339,6 +341,300 @@
                     <p class="text-slate-400 text-xs sm:text-sm flex-grow">
                         Traducción amigable de fallos de red/servidor al español, notificaciones flotantes Snackbar, retroalimentación de búsquedas vacías y botón de rescate inmediato para volver a la ubicación predeterminada.
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentación de la Interfaz de Usuario e Iconografía -->
+    <section id="interfaz" class="py-20 sm:py-24 bg-slate-900/40 border-y border-slate-800/80 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 mb-3">
+                    📱 Manual de UI/UX & Guía de Iconografía
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">
+                    Documentación Detallada de la <span class="gradient-text">Interfaz de Usuario</span>
+                </h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    La interfaz de Aura en Jetpack Compose ha sido diseñada bajo los estándares de Material Design 3 (M3). A continuación se explica en detalle cada uno de los componentes, secciones e iconos interactivos presentes en la pantalla principal.
+                </p>
+            </div>
+
+            <!-- Grid de Secciones Principales de la UI -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                <!-- 1. Barra de Búsqueda y GPS -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 hover:border-brand-teal/40 transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-brand-cyan/10 border border-brand-cyan/20 flex items-center justify-center text-brand-cyan font-bold text-lg">
+                            🔍
+                        </div>
+                        <h3 class="text-lg font-bold text-white">1. Barra Superior de Búsqueda & GPS</h3>
+                    </div>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
+                        Ubicada en la parte superior con soporte Edge-to-Edge. Permite buscar ciudades globales por nombre en tiempo real o autodetectar la posición del usuario.
+                    </p>
+                    <div class="space-y-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80 text-xs text-slate-300">
+                        <div class="flex items-start gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-brand-teal/20 text-brand-teal font-mono font-bold shrink-0">Search</span>
+                            <span><strong>Icono de Lupa (🔍):</strong> Campo de texto interactivo. Al escribir 3 o más caracteres, despliega una tarjeta flotante de autocompletado con las coincidencias encontradas por Open-Meteo Geocoding.</span>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono font-bold shrink-0">Close</span>
+                            <span><strong>Icono de Cruz (❌):</strong> Aparece dinámicamente al escribir. Permite borrar al instante el texto ingresado para realizar una nueva búsqueda.</span>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-brand-cyan/20 text-brand-cyan font-mono font-bold shrink-0">LocationOn</span>
+                            <span><strong>Icono de GPS (📍):</strong> Botón circular con fondo translúcido. Solicita permisos de ubicación dinámica en Android y carga inmediatamente el pronóstico del punto GPS actual.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Cinturón de Favoritos -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 hover:border-brand-teal/40 transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-lg">
+                            ⭐
+                        </div>
+                        <h3 class="text-lg font-bold text-white">2. Cinturón de Ubicaciones Favoritas</h3>
+                    </div>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
+                        Fila horizontal deslizable (<code class="text-brand-teal font-mono">LazyRow</code>) con chips interactivos que muestran las ciudades guardadas en la base de datos SQLite con Room.
+                    </p>
+                    <div class="space-y-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80 text-xs text-slate-300">
+                        <div class="flex items-start gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold shrink-0">Star (Pill)</span>
+                            <span><strong>Estrella Dorada (⭐):</strong> Cada ciudad favorita incluye una estrella en tono dorado <code class="text-amber-400 font-mono">#FFD700</code>. Tocar un chip cambia al instante la ubicación activa sin necesidad de volver a buscar.</span>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-brand-teal/20 text-brand-teal font-mono font-bold shrink-0">Toggle</span>
+                            <span><strong>Botón de Estrella en Cabecera (⭐ / ✩):</strong> Al hacer clic en la estrella de la cabecera principal, la ciudad actual se agrega o elimina inmediatamente de la base de datos local Room.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Cabecera Principal y Hora Local -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 hover:border-brand-teal/40 transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-lg">
+                            📅
+                        </div>
+                        <h3 class="text-lg font-bold text-white">3. Cabecera de Ubicación & Hora Local</h3>
+                    </div>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
+                        Presenta el nombre de la ciudad, provincia/país, hora local exacta en tiempo real calculada con la zona horaria del lugar buscado y selector de unidades.
+                    </p>
+                    <div class="space-y-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80 text-xs text-slate-300">
+                        <div class="flex items-start gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-brand-cyan/20 text-brand-cyan font-mono font-bold shrink-0">DateRange</span>
+                            <span><strong>Icono de Calendario (📅):</strong> En color cyan celeste. Acompaña el texto formateado en español con la fecha y hora local sincronizada de la ciudad (ej: <i>"Domingo, 26 de Julio • 18:45"</i>).</span>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 font-mono font-bold shrink-0">°C / °F</span>
+                            <span><strong>Conmutador de Unidades (°C / °F):</strong> Botón tipo selector. Permite cambiar al instante entre grados Celsius y Fahrenheit en toda la interfaz (temperatura actual, gráfica 24h y pronóstico 7 días).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Gráfica de Tendencia Térmica de 24 Horas -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 hover:border-brand-teal/40 transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-lg">
+                            📈
+                        </div>
+                        <h3 class="text-lg font-bold text-white">4. Gráfica Interactiva de Tendencia (24h)</h3>
+                    </div>
+                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
+                        Curva suave Bezier dibujada sobre Canvas en Jetpack Compose con soporte de gestos táctiles (Tap y Drag) para inspeccionar la evolución térmica hora por hora.
+                    </p>
+                    <div class="space-y-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80 text-xs text-slate-300">
+                        <div class="flex items-start gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-brand-cyan/20 text-brand-cyan font-mono font-bold shrink-0">Touch Dot</span>
+                            <span><strong>Punto Flotante Cyan (🔵):</strong> Se desplaza dinámicamente al arrastrar el dedo sobre la gráfica, destacando la temperatura exacta, hora local y estado meteorológico de la hora seleccionada.</span>
+                        </div>
+                        <div class="flex items-start gap-2.5">
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono font-bold shrink-0">Sync</span>
+                            <span><strong>Sincronización Exacta "Ahora":</strong> El primer punto de la curva coincide al 100% con la temperatura real en la cabecera principal.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Explicación de Iconos y Símbolos Meteorológicos Vectoriales -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10 mb-12">
+                <div class="mb-8 border-b border-slate-800 pb-6">
+                    <span class="text-brand-teal text-xs font-bold font-mono tracking-widest uppercase">Diseño de Precisión Vectorial</span>
+                    <h3 class="text-2xl font-extrabold text-white mt-1">Catálogo de Gráficos y Símbolos Meteorológicos</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm mt-2">
+                        En lugar de imágenes estáticas pixeladas, Aura utiliza renderizados vectoriales con Jetpack Compose Canvas (<code class="text-brand-teal font-mono">WeatherConditionGraphic</code>) para dibujar el clima de forma fluida y de alta resolución:
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Icono Sol -->
+                    <div class="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-start gap-4">
+                        <div class="text-3xl shrink-0 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20">☀️</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100">Cielo Despejado (Día)</h4>
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-300 font-mono mt-1 mb-2">Código WMO: 0, 1</span>
+                            <p class="text-slate-400 text-xs">Círculo central dorado con rayos vectoriales radiantes. Representa cielos limpios y soleados.</p>
+                        </div>
+                    </div>
+
+                    <!-- Icono Luna -->
+                    <div class="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-start gap-4">
+                        <div class="text-3xl shrink-0 p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20">🌙</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100">Cielo Despejado (Noche)</h4>
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] bg-indigo-500/20 text-indigo-300 font-mono mt-1 mb-2">Código WMO: 0, 1 (Noche)</span>
+                            <p class="text-slate-400 text-xs">Luna creciente plateada con tres estrellas titilantes dibujadas a su alrededor.</p>
+                        </div>
+                    </div>
+
+                    <!-- Icono Nube -->
+                    <div class="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-start gap-4">
+                        <div class="text-3xl shrink-0 p-2.5 rounded-xl bg-slate-700/20 border border-slate-700/30">☁️</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100">Nublado / Parcialmente Nublado</h4>
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] bg-slate-700/30 text-slate-300 font-mono mt-1 mb-2">Código WMO: 2, 3</span>
+                            <p class="text-slate-400 text-xs">Estructura combinada de óvalos superpuestos en tonos blanco y gris slate para nubes acumulativas.</p>
+                        </div>
+                    </div>
+
+                    <!-- Icono Niebla -->
+                    <div class="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-start gap-4">
+                        <div class="text-3xl shrink-0 p-2.5 rounded-xl bg-slate-600/20 border border-slate-600/30">🌫️</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100">Niebla / Escarcha</h4>
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] bg-slate-600/30 text-slate-300 font-mono mt-1 mb-2">Código WMO: 45, 48</span>
+                            <p class="text-slate-400 text-xs">Líneas horizontales en capas con bordes redondeados y opacidad translúcida.</p>
+                        </div>
+                    </div>
+
+                    <!-- Icono Lluvia -->
+                    <div class="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-start gap-4">
+                        <div class="text-3xl shrink-0 p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20">🌧️</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100">Lluvia / Llovizna / Chubascos</h4>
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] bg-cyan-500/20 text-cyan-300 font-mono mt-1 mb-2">Código WMO: 51-67, 80-82</span>
+                            <p class="text-slate-400 text-xs">Nube gris slate acompañada de gotas inclinadas dibujadas en tono turquesa fluorescente (<code class="text-brand-cyan font-mono">#80DEEA</code>).</p>
+                        </div>
+                    </div>
+
+                    <!-- Icono Nieve -->
+                    <div class="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-start gap-4">
+                        <div class="text-3xl shrink-0 p-2.5 rounded-xl bg-blue-300/10 border border-blue-300/20">❄️</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100">Nevada / Granos de Nieve</h4>
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] bg-blue-300/20 text-blue-200 font-mono mt-1 mb-2">Código WMO: 71-77, 85-86</span>
+                            <p class="text-slate-400 text-xs">Nube blanca pura acompañada de copos circulares flotantes dispersos en la base.</p>
+                        </div>
+                    </div>
+
+                    <!-- Icono Tormenta -->
+                    <div class="p-5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex items-start gap-4">
+                        <div class="text-3xl shrink-0 p-2.5 rounded-xl bg-yellow-500/10 border border-yellow-500/20">⚡</div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-100">Tormenta Eléctrica / Granizo</h4>
+                            <span class="inline-block px-2 py-0.5 rounded text-[10px] bg-yellow-500/20 text-yellow-300 font-mono mt-1 mb-2">Código WMO: 95, 96, 99</span>
+                            <p class="text-slate-400 text-xs">Nube oscura en tono plomo con rayo vectorial en zigzag amarillo brillante en el centro.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla Guía de Tarjetas de Detalles Meteorológicos e Iconos Auxiliares -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-10">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        📊 Métricas Detalladas, Avisos y Botones de Control
+                    </h3>
+                    <p class="text-slate-400 text-xs sm:text-sm mt-1">
+                        Cada métrica meteorológica utiliza un identificador visual y subtítulo contextual para facilitar su lectura:
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs text-slate-300">
+                    <!-- Sensacion Termica -->
+                    <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex items-start gap-3">
+                        <span class="text-2xl shrink-0">🌡️</span>
+                        <div>
+                            <h5 class="font-bold text-slate-100 text-sm">Sensación Térmica</h5>
+                            <p class="text-slate-400 mt-0.5">Muestra la temperatura aparente calculada en función de la humedad y el viento.</p>
+                        </div>
+                    </div>
+
+                    <!-- Viento -->
+                    <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex items-start gap-3">
+                        <span class="text-2xl shrink-0">💨</span>
+                        <div>
+                            <h5 class="font-bold text-slate-100 text-sm">Viento & Dirección</h5>
+                            <p class="text-slate-400 mt-0.5">Velocidad del viento en km/h y orientación en grados sexagesimales.</p>
+                        </div>
+                    </div>
+
+                    <!-- Humedad -->
+                    <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex items-start gap-3">
+                        <span class="text-2xl shrink-0">💧</span>
+                        <div>
+                            <h5 class="font-bold text-slate-100 text-sm">Humedad Relativa</h5>
+                            <p class="text-slate-400 mt-0.5">Porcentaje de vapor de agua en la atmósfera respecto al punto de saturación.</p>
+                        </div>
+                    </div>
+
+                    <!-- Lluvia -->
+                    <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex items-start gap-3">
+                        <span class="text-2xl shrink-0">☔</span>
+                        <div>
+                            <h5 class="font-bold text-slate-100 text-sm">Probabilidad de Lluvia</h5>
+                            <p class="text-slate-400 mt-0.5">Porcentaje de probabilidad máxima de precipitación proyectada en la hora o día.</p>
+                        </div>
+                    </div>
+
+                    <!-- Indice UV -->
+                    <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex items-start gap-3">
+                        <span class="text-2xl shrink-0">☀️</span>
+                        <div>
+                            <h5 class="font-bold text-slate-100 text-sm">Índice UV</h5>
+                            <p class="text-slate-400 mt-0.5">Clasificación de la intensidad ultravioleta (Bajo, Moderado, Alto o Extremo).</p>
+                        </div>
+                    </div>
+
+                    <!-- Ciclo Solar -->
+                    <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex items-start gap-3">
+                        <span class="text-2xl shrink-0">🌅</span>
+                        <div>
+                            <h5 class="font-bold text-slate-100 text-sm">Amanecer y Atardecer</h5>
+                            <p class="text-slate-400 mt-0.5">Horas exactas del orto y el ocaso del sol en la ubicación geográfica actual.</p>
+                        </div>
+                    </div>
+
+                    <!-- Avisos de Emergencia -->
+                    <div class="p-4 rounded-2xl bg-rose-950/40 border border-rose-800/50 flex items-start gap-3">
+                        <span class="text-2xl shrink-0">🚨</span>
+                        <div>
+                            <h5 class="font-bold text-rose-200 text-sm">Avisos Severos</h5>
+                            <p class="text-rose-300/80 mt-0.5">Barra roja de emergencia que se despliega si hay olas de calor/frío o vientos extremos.</p>
+                        </div>
+                    </div>
+
+                    <!-- Resumen Matutino -->
+                    <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex items-start gap-3">
+                        <span class="text-2xl shrink-0">🔔</span>
+                        <div>
+                            <h5 class="font-bold text-slate-100 text-sm">Resumen Matutino (WorkManager)</h5>
+                            <p class="text-slate-400 mt-0.5">Indica la programación diaria de las 07:30 AM e incluye el botón 🚀 para probar la notificación.</p>
+                        </div>
+                    </div>
+
+                    <!-- Boton de Rescate -->
+                    <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex items-start gap-3">
+                        <span class="text-2xl shrink-0">🏠</span>
+                        <div>
+                            <h5 class="font-bold text-slate-100 text-sm">Botón de Rescate (Madrid)</h5>
+                            <p class="text-slate-400 mt-0.5">Aparece en la pantalla de error de conexión para restablecer la app a la ciudad base.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -583,6 +879,7 @@ com.aura
             <p class="text-center md:text-left">© 2026 Aura Clima. Todos los derechos reservados. Desarrollado con Jetpack Compose.</p>
             <div class="flex gap-6">
                 <!-- Links -->
+                <a href="#interfaz" class="hover:text-brand-teal transition-colors">Interfaz & Iconos</a>
                 <a href="#arquitectura" class="hover:text-brand-teal transition-colors">Código Limpio</a>
                 <a href="#privacidad" class="hover:text-brand-teal transition-colors">Política de Privacidad</a>
                 <a href="#inicio" class="hover:text-brand-teal transition-colors">Volver arriba</a>

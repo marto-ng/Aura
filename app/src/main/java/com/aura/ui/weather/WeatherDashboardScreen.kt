@@ -515,6 +515,24 @@ fun WeatherDashboardScreen(
                     }
                 }
                 is WeatherUiState.Success -> {
+                    // Calculate current hour index in the target location timezone for accurate precipitation probability
+                    val currentHourIndex = remember(state.weather.hourly?.time, locationTimeZone) {
+                        try {
+                            val hourlyTimes = state.weather.hourly?.time ?: emptyList()
+                            val hourSdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:00", java.util.Locale.US).apply {
+                                this.timeZone = locationTimeZone
+                            }
+                            val currentLocalHourStr = hourSdf.format(java.util.Date())
+                            var startIdx = hourlyTimes.indexOfFirst { it.startsWith(currentLocalHourStr.substring(0, 13)) }
+                            if (startIdx == -1) {
+                                startIdx = hourlyTimes.indexOfFirst { it >= currentLocalHourStr }
+                            }
+                            if (startIdx != -1) startIdx else 0
+                        } catch (e: Exception) {
+                            0
+                        }
+                    }
+
                     // Weather Dashboard Detail inside a Scrollable column
                     LazyColumn(
                         modifier = Modifier
@@ -616,7 +634,9 @@ fun WeatherDashboardScreen(
                         val currentTemp = state.weather.current?.temperature2m ?: 0.0
                         val uvIndex = state.weather.current?.uvIndex ?: 0.0
                         val windSpeed = state.weather.current?.windSpeed10m ?: 0.0
-                        val rainProb = state.weather.hourly?.precipitationProbability?.firstOrNull() ?: 0
+                        val rainProb = state.weather.hourly?.precipitationProbability?.getOrNull(currentHourIndex)
+                            ?: state.weather.hourly?.precipitationProbability?.firstOrNull()
+                            ?: 0
                         val alerts = WeatherInfoHelper.getExtremeAlerts(
                             temp = currentTemp,
                             uvIndex = uvIndex,
@@ -667,60 +687,13 @@ fun WeatherDashboardScreen(
                             }
                         }
 
-                        // Big Temperature Display with Custom Graphic Icon
-                        item {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = formatTemp(currentTemp, isCelsius),
-                                        fontSize = 72.sp,
-                                        fontWeight = FontWeight.ExtraBold,
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.headlineLarge
-                                    )
-                                    Text(
-                                        text = WeatherInfoHelper.getWeatherDescription(weatherCode),
-                                        style = MaterialTheme.typography.titleLarge,
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
 
-                                // Interactive Animated/Canvas graphic representing condition
-                                WeatherConditionGraphic(
-                                    code = weatherCode,
-                                    isDay = isDay,
-                                    modifier = Modifier
-                                        .size(100.dp)
-                                        .weight(0.7f)
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(24.dp))
-                        }
 
                         // Interactive 24-Hour Temperature Trend Chart (Touch Gestures Supported)
                         item {
                             state.weather.hourly?.let { hourly ->
-                                val indices = remember(hourly.time, locationTimeZone) {
-                                    try {
-                                        val hourSdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:00", java.util.Locale.US).apply {
-                                            this.timeZone = locationTimeZone
-                                        }
-                                        val currentLocalHourStr = hourSdf.format(java.util.Date())
-                                        var startIdx = hourly.time.indexOfFirst { it.startsWith(currentLocalHourStr.substring(0, 13)) }
-                                        if (startIdx == -1) {
-                                            startIdx = hourly.time.indexOfFirst { it >= currentLocalHourStr }
-                                        }
-                                        val startIndexVal = if (startIdx != -1) startIdx else 0
-                                        (startIndexVal until (startIndexVal + 24).coerceAtMost(hourly.time.size)).toList()
-                                    } catch (e: Exception) {
-                                        (0..23).toList()
-                                    }
+                                val indices = remember(hourly.time, currentHourIndex) {
+                                    (currentHourIndex until (currentHourIndex + 24).coerceAtMost(hourly.time.size)).toList()
                                 }
 
                                 TemperatureTrendChart(
@@ -822,16 +795,49 @@ fun WeatherDashboardScreen(
 
                         // 7-Day Forecast Card
                         item {
-                            Text(
-                                text = "Pronóstico de 7 Días",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-
                             state.weather.daily?.let { daily ->
                                 val daysCount = daily.time.size
+                                val occurrenceProbs = (0 until daysCount).map { i ->
+                                    calculateOccurrenceProbability(
+                                        dayIndex = i,
+                                        daysTotal = daysCount,
+                                        weatherCode = daily.weatherCode.getOrNull(i) ?: 0,
+                                        precipProb = daily.precipitationProbabilityMax.getOrNull(i) ?: 0,
+                                        windSpeed = daily.windSpeed10mMax?.getOrNull(i),
+                                        tempMax = daily.temperature2mMax.getOrNull(i) ?: 0.0,
+                                        tempMin = daily.temperature2mMin.getOrNull(i) ?: 0.0
+                                    )
+                                }
+                                val minProb = occurrenceProbs.minOrNull() ?: 80
+                                val maxProb = occurrenceProbs.maxOrNull() ?: 99
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "Pronóstico de 7 Días",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Surface(
+                                        shape = RoundedCornerShape(12.dp),
+                                        color = Color(0xFF38BDF8).copy(alpha = 0.15f),
+                                        border = BorderStroke(1.dp, Color(0xFF38BDF8).copy(alpha = 0.3f))
+                                    ) {
+                                        Text(
+                                            text = "$minProb% - $maxProb% prob. ocurrencia",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = Color(0xFF38BDF8),
+                                            fontWeight = FontWeight.SemiBold,
+                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+
                                 Card(
                                     modifier = Modifier.fillMaxWidth(),
                                     shape = RoundedCornerShape(20.dp),
@@ -839,12 +845,14 @@ fun WeatherDashboardScreen(
                                 ) {
                                     Column(modifier = Modifier.padding(16.dp)) {
                                         for (i in 0 until daysCount) {
+                                            val occurrenceProb = occurrenceProbs.getOrElse(i) { 90 }
                                             DailyForecastRow(
                                                 date = daily.time[i],
                                                 code = daily.weatherCode[i],
                                                 tempMin = daily.temperature2mMin[i],
                                                 tempMax = daily.temperature2mMax[i],
                                                 prob = daily.precipitationProbabilityMax.getOrNull(i) ?: 0,
+                                                occurrenceProb = occurrenceProb,
                                                 isCelsius = isCelsius
                                             )
                                             if (i < daysCount - 1) {
@@ -874,12 +882,14 @@ fun WeatherDashboardScreen(
                             val feelsLike = currentInfo?.apparentTemperature ?: 0.0
                             val windDir = currentInfo?.windDirection10m ?: 0.0
                             val humidity = currentInfo?.relativeHumidity2m ?: 0.0
+                            val cloudCover = currentInfo?.cloudCover ?: 0.0
+                            val precip = currentInfo?.precipitation ?: 0.0
                             val sunriseTime = dailyInfo?.sunrise?.firstOrNull()?.let { formatHour(it) } ?: "--:--"
                             val sunsetTime = dailyInfo?.sunset?.firstOrNull()?.let { formatHour(it) } ?: "--:--"
 
                             Column(modifier = Modifier.fillMaxWidth()) {
                                 Row(modifier = Modifier.fillMaxWidth()) {
-                                    // Apparent temperature Card (Asymmetric)
+                                    // Apparent temperature Card
                                     MetricCard(
                                         title = "Sensación Térmica",
                                         value = formatTemp(feelsLike, isCelsius),
@@ -888,12 +898,12 @@ fun WeatherDashboardScreen(
                                         modifier = Modifier.weight(1f)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    // Wind Speed Card (Asymmetric)
+                                    // Wind Speed Card
                                     MetricCard(
                                         title = "Viento",
                                         value = "$windSpeed km/h",
                                         icon = "💨",
-                                        subtitle = "Dirección: $windDir°",
+                                        subtitle = "Dir: ${windDir.toInt()}° (${getWindDirectionCardinal(windDir)})",
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
@@ -913,7 +923,27 @@ fun WeatherDashboardScreen(
                                         title = "Lluvia",
                                         value = "${rainProb}%",
                                         icon = "☔",
-                                        subtitle = "Prob. de precipitación",
+                                        subtitle = "Probabilidad actual",
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    // Current Precipitation Card
+                                    MetricCard(
+                                        title = "Precipitación",
+                                        value = "$precip mm",
+                                        icon = "🌧️",
+                                        subtitle = "Acumulada esta hora",
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    // Cloud Cover Card
+                                    MetricCard(
+                                        title = "Nubosidad",
+                                        value = "${cloudCover.toInt()}%",
+                                        icon = "☁️",
+                                        subtitle = "Cobertura de nubes",
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
@@ -1049,6 +1079,7 @@ fun DailyForecastRow(
     tempMin: Double,
     tempMax: Double,
     prob: Int,
+    occurrenceProb: Int = 90,
     isCelsius: Boolean
 ) {
     Row(
@@ -1063,9 +1094,9 @@ fun DailyForecastRow(
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
-            // format date neatly
+            // format date neatly with occurrence probability
             Text(
-                text = date,
+                text = "$date • $occurrenceProb% prob.",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White.copy(alpha = 0.6f)
             )
@@ -1331,3 +1362,53 @@ private fun formatHour(timeString: String): String {
         timeString
     }
 }
+
+private fun getWindDirectionCardinal(degrees: Double): String {
+    val directions = arrayOf("N", "NE", "E", "SE", "S", "SO", "O", "NO")
+    val index = ((degrees + 22.5) % 360 / 45).toInt()
+    return directions[index.coerceIn(0, 7)]
+}
+
+private fun calculateOccurrenceProbability(
+    dayIndex: Int,
+    daysTotal: Int,
+    weatherCode: Int,
+    precipProb: Int,
+    windSpeed: Double? = null,
+    tempMax: Double = 0.0,
+    tempMin: Double = 0.0
+): Int {
+    // Base confidence decays gracefully across the 7-day projection horizon
+    val baseProb = 98.0 - (dayIndex.toDouble() * 18.0 / (daysTotal - 1).coerceAtLeast(1))
+
+    // Atmospheric predictability factor according to WMO weather condition
+    val codeAdjustment = when (weatherCode) {
+        0, 1 -> 2.0         // Stable clear sky
+        2, 3 -> 0.0         // Partly cloudy / Overcast
+        45, 48 -> -1.0      // Fog
+        in 51..67 -> -2.0   // Light Rain / Drizzle
+        in 71..77 -> -3.0   // Snow
+        in 80..82 -> -3.0   // Rain showers
+        in 85..86 -> -3.0   // Snow showers
+        in 95..99 -> -5.0   // Thunderstorms (higher atmospheric turbulence)
+        else -> 0.0
+    }
+
+    // Precipitation probability impact
+    val precipAdjustment = when {
+        precipProb < 15 -> 1.5   // Dry conditions are highly predictable
+        precipProb > 70 -> -2.0  // High precipitation days introduce variance
+        else -> 0.0
+    }
+
+    // Wind speed impact
+    val windAdjustment = if (windSpeed != null && windSpeed > 35.0) -2.0 else 0.0
+
+    // Thermal fluctuation impact
+    val tempRange = tempMax - tempMin
+    val tempAdjustment = if (tempRange > 15.0) -1.0 else 0.0
+
+    val total = baseProb + codeAdjustment + precipAdjustment + windAdjustment + tempAdjustment
+    return (total + 0.5).toInt().coerceIn(80, 99)
+}
+
