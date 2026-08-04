@@ -27,6 +27,10 @@ class WeatherAppWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         val prefs = context.getSharedPreferences("weather_widget_prefs", Context.MODE_PRIVATE)
+        val settingsPrefs = context.getSharedPreferences("aura_settings_prefs", Context.MODE_PRIVATE)
+        val isEnglish = settingsPrefs.getBoolean("is_english", false)
+        val isCelsius = settingsPrefs.getBoolean("is_celsius", true)
+
         val cityName = prefs.getString("city_name", "Madrid") ?: "Madrid"
         val temp = prefs.getFloat("temperature", 22f)
         val weatherCode = prefs.getInt("weather_code", 0)
@@ -35,18 +39,33 @@ class WeatherAppWidgetProvider : AppWidgetProvider() {
         val uvIndex = prefs.getFloat("uv_index", 0f)
         val trendStr = prefs.getString("temp_trend", "") ?: ""
         
-        val weatherStatus = WeatherInfoHelper.getWeatherDescription(weatherCode)
+        val weatherStatus = WeatherInfoHelper.getWeatherDescription(weatherCode, isEnglish)
         val timeStr = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 
+        val tempVal = if (isCelsius) temp.toInt() else ((temp * 9 / 5) + 32).toInt()
+        val tempUnitSymbol = if (isCelsius) "°C" else "°F"
+
         // Map weatherCode to personalized recommendation titles and subtitles for dynamic widget animation
-        val (recommendation, recommendationSub) = when (weatherCode) {
-            0, 1 -> Pair("☀️ ¡Cielo despejado!", "Buen clima para caminar ✨")
-            2, 3 -> Pair("☁️ Se asoman nubes...", "Un cielo texturizado 🎨")
-            45, 48 -> Pair("🌫️ Día con niebla", "Mucha precaución al andar ⚠️")
-            in 51..57, in 61..67, in 80..82 -> Pair("🌧️ ¡Se aproxima lluvia!", "¡No olvides tu paraguas! ☔")
-            in 71..77, in 85..86 -> Pair("❄️ ¡Está nevando!", "Abrígate muy bien hoy 🧥")
-            95, 96, 99 -> Pair("⚡ Tormenta eléctrica", "Permanece hoy bajo techo 🏠")
-            else -> Pair("🌤️ Clima cambiante", "Aprovecha al máximo tu día 🌟")
+        val (recommendation, recommendationSub) = if (isEnglish) {
+            when (weatherCode) {
+                0, 1 -> Pair("☀️ Clear sky!", "Great weather for a walk ✨")
+                2, 3 -> Pair("☁️ Clouds appearing...", "A textured sky 🎨")
+                45, 48 -> Pair("🌫️ Foggy day", "Be very careful on the road ⚠️")
+                in 51..57, in 61..67, in 80..82 -> Pair("🌧️ Rain approaching!", "Don't forget your umbrella! ☔")
+                in 71..77, in 85..86 -> Pair("❄️ It is snowing!", "Dress warmly today 🧥")
+                95, 96, 99 -> Pair("⚡ Thunderstorm", "Stay indoors today 🏠")
+                else -> Pair("🌤️ Changing weather", "Make the most of your day 🌟")
+            }
+        } else {
+            when (weatherCode) {
+                0, 1 -> Pair("☀️ ¡Cielo despejado!", "Buen clima para caminar ✨")
+                2, 3 -> Pair("☁️ Se asoman nubes...", "Un cielo texturizado 🎨")
+                45, 48 -> Pair("🌫️ Día con niebla", "Mucha precaución al andar ⚠️")
+                in 51..57, in 61..67, in 80..82 -> Pair("🌧️ ¡Se aproxima lluvia!", "¡No olvides tu paraguas! ☔")
+                in 71..77, in 85..86 -> Pair("❄️ ¡Está nevando!", "Abrígate muy bien hoy 🧥")
+                95, 96, 99 -> Pair("⚡ Tormenta eléctrica", "Permanece hoy bajo techo 🏠")
+                else -> Pair("🌤️ Clima cambiante", "Aprovecha al máximo tu día 🌟")
+            }
         }
 
         // Detect any active extreme weather alert using our WeatherInfoHelper
@@ -54,7 +73,8 @@ class WeatherAppWidgetProvider : AppWidgetProvider() {
             temp.toDouble(),
             uvIndex.toDouble(),
             windSpeed.toDouble(),
-            weatherCode
+            weatherCode,
+            isEnglish
         )
 
         // Parse or generate 24h temperature trend
@@ -84,9 +104,9 @@ class WeatherAppWidgetProvider : AppWidgetProvider() {
             val views = RemoteViews(context.packageName, R.layout.weather_widget)
             
             views.setTextViewText(R.id.widget_city, cityName)
-            views.setTextViewText(R.id.widget_temp, "${temp.toInt()}°C")
+            views.setTextViewText(R.id.widget_temp, "$tempVal$tempUnitSymbol")
             views.setTextViewText(R.id.widget_status, weatherStatus)
-            views.setTextViewText(R.id.widget_rain, "💧 Lluvia: $rainProbability%")
+            views.setTextViewText(R.id.widget_rain, if (isEnglish) "💧 Rain: $rainProbability%" else "💧 Lluvia: $rainProbability%")
             views.setTextViewText(R.id.widget_time, timeStr)
             
             // Set animation recommendation values for Slide 2 of ViewFlipper

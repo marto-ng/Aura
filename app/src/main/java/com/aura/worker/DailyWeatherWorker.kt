@@ -87,7 +87,11 @@ class DailyWeatherWorker(
             val maxTemp = weather.daily?.temperature2mMax?.firstOrNull() ?: (currentTemp + 4.0)
             val minTemp = weather.daily?.temperature2mMin?.firstOrNull() ?: (currentTemp - 3.0)
 
-            val weatherDesc = WeatherInfoHelper.getWeatherDescription(weatherCode)
+            val settingsPrefs = context.getSharedPreferences("aura_settings_prefs", Context.MODE_PRIVATE)
+            val isEnglish = settingsPrefs.getBoolean("is_english", false)
+            val isCelsius = settingsPrefs.getBoolean("is_celsius", true)
+
+            val weatherDesc = WeatherInfoHelper.getWeatherDescription(weatherCode, isEnglish)
 
             sendNotification(
                 cityName = cityName,
@@ -96,7 +100,9 @@ class DailyWeatherWorker(
                 maxTemp = maxTemp,
                 minTemp = minTemp,
                 rainProb = rainProb,
-                windSpeed = windSpeed
+                windSpeed = windSpeed,
+                isCelsius = isCelsius,
+                isEnglish = isEnglish
             )
 
             Result.success()
@@ -144,19 +150,23 @@ class DailyWeatherWorker(
         maxTemp: Double,
         minTemp: Double,
         rainProb: Int,
-        windSpeed: Double
+        windSpeed: Double,
+        isCelsius: Boolean,
+        isEnglish: Boolean
     ) {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Create Notification Channel for Android O+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelName = if (isEnglish) "Daily Weather Summary" else "Resumen Meteorológico Diario"
+            val channelDesc = if (isEnglish) "Daily morning weather summary notifications." else "Notificaciones diarias matutinas con el resumen del clima."
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Resumen Meteorológico Diario",
+                channelName,
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Notificaciones diarias matutinas con el resumen del clima."
+                description = channelDesc
                 enableVibration(true)
             }
             notificationManager.createNotificationChannel(channel)
@@ -172,16 +182,33 @@ class DailyWeatherWorker(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val shortTitle = "Buenos días 🌤️ • $cityName"
-        val shortContent = "$weatherDesc, ${currentTemp.toInt()}°C (Máx: ${maxTemp.toInt()}°C / Mín: ${minTemp.toInt()}°C). Prob. lluvia: $rainProb%"
+        val unitSymbol = if (isCelsius) "°C" else "°F"
+        val cTemp = if (isCelsius) currentTemp.toInt() else ((currentTemp * 9 / 5) + 32).toInt()
+        val mxTemp = if (isCelsius) maxTemp.toInt() else ((maxTemp * 9 / 5) + 32).toInt()
+        val mnTemp = if (isCelsius) minTemp.toInt() else ((minTemp * 9 / 5) + 32).toInt()
 
-        val expandedSummary = """
-            📍 Ubicación: $cityName
-            🌡️ Clima actual: $weatherDesc (${currentTemp.toInt()}°C)
-            📊 Rango de hoy: Máx ${maxTemp.toInt()}°C | Mín ${minTemp.toInt()}°C
-            💧 Probabilidad de lluvia: $rainProb%
-            💨 Viento: ${windSpeed.toInt()} km/h
-        """.trimIndent()
+        val shortTitle = if (isEnglish) "Good morning 🌤️ • $cityName" else "Buenos días 🌤️ • $cityName"
+        val maxMinLabel = if (isEnglish) "Max: $mxTemp$unitSymbol / Min: $mnTemp$unitSymbol" else "Máx: $mxTemp$unitSymbol / Mín: $mnTemp$unitSymbol"
+        val rainLabel = if (isEnglish) "Rain prob: $rainProb%" else "Prob. lluvia: $rainProb%"
+        val shortContent = "$weatherDesc, $cTemp$unitSymbol ($maxMinLabel). $rainLabel"
+
+        val expandedSummary = if (isEnglish) {
+            """
+                📍 Location: $cityName
+                🌡️ Current weather: $weatherDesc ($cTemp$unitSymbol)
+                📊 Today's range: Max $mxTemp$unitSymbol | Min $mnTemp$unitSymbol
+                💧 Rain probability: $rainProb%
+                💨 Wind: ${windSpeed.toInt()} km/h
+            """.trimIndent()
+        } else {
+            """
+                📍 Ubicación: $cityName
+                🌡️ Clima actual: $weatherDesc ($cTemp$unitSymbol)
+                📊 Rango de hoy: Máx $mxTemp$unitSymbol | Mín $mnTemp$unitSymbol
+                💧 Probabilidad de lluvia: $rainProb%
+                💨 Viento: ${windSpeed.toInt()} km/h
+            """.trimIndent()
+        }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)

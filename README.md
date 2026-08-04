@@ -8,7 +8,13 @@ La aplicación se destaca por su capacidad de autoubicación en tiempo real, sin
 
 ## 🎨 Características Destacadas
 
-### 1. 📊 Gráfica Interactiva de Tendencia Térmica 24h en Compose (Versión 3.3)
+### 1. 🌐 Soporte Bilingüe Integral & Modal de Ajustes (Versión 3.4)
+* **Soporte Bilingüe Nativo (Español / English):** Cambio dinámico de idioma en tiempo real a lo largo de toda la aplicación sin reiniciar ni interrumpir la ubicación activa.
+* **Diálogo de Ajustes (SettingsDialog):** Botón de acceso directo con icono de engranaje (⚙️) en la barra superior para seleccionar fácilmente el idioma (🇪🇸 Español / 🇬🇧 English) y las unidades de temperatura (°C Celsius / °F Fahrenheit).
+* **Persistencia Global de Preferencias (`SharedPreferences`):** Guardado automático de los ajustes elegidos (`aura_settings_prefs`), aplicándose al dashboard principal, gráfica de tendencia de 24h, tarjetas de métricas, notificaciones del WorkManager y Widget de la pantalla de inicio.
+* **Internacionalización de Datos:** Descripciones del clima traducidas (ej: *Clear sky / Cielo despejado*), días de la semana y fecha local adaptados al Locale activo, y rosa de los vientos cardinal ajustada (ej. `SW` / `NW` en inglés vs `SO` / `NO` en español).
+
+### 2. 📊 Gráfica Interactiva de Tendencia Térmica 24h en Compose (Versión 3.3)
 * **Gráfica Vectorial Interactiva (`TemperatureTrendChart`):** Curva suave de Bezier dibujada directamente sobre un lienzo de `Canvas` en Jetpack Compose con degradado de color cian neón.
 * **Gestos Táctiles y Deslizamiento:** Soporte para gestos de toque y arrastre (`pointerInput`) sobre la gráfica, permitiendo al usuario explorar la temperatura hora por hora.
 * **Tarjeta Flotante de Detalle (`Tooltip`):** Al presionar o arrastrar el dedo por la gráfica, se despliega una tarjeta dinámica con el icono animado del estado del clima, la probabilidad de lluvia (💧), el horario exacto y la descripción traducida.

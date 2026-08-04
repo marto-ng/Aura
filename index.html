@@ -55,18 +55,35 @@
             
             <!-- Desktop Nav -->
             <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-                <a href="#inicio" class="hover:text-brand-teal transition-colors">Inicio</a>
-                <a href="#caracteristicas" class="hover:text-brand-teal transition-colors">Características</a>
-                <a href="#interfaz" class="hover:text-brand-teal transition-colors">Interfaz & Iconos</a>
-                <a href="#arquitectura" class="hover:text-brand-teal transition-colors">Arquitectura</a>
-                <a href="#privacidad" class="hover:text-brand-teal transition-colors">Privacidad</a>
-                <a href="notas-de-actualizacion.html" class="px-3 py-1 bg-brand-teal/10 text-brand-teal border border-brand-teal/25 rounded-lg hover:bg-brand-teal/20 transition-colors text-xs font-bold font-mono">📢 Notas de Actualización</a>
-                <a href="#descargar" class="hover:text-brand-teal transition-colors">Instalación</a>
+                <a href="#inicio" class="hover:text-brand-teal transition-colors" data-es="Inicio" data-en="Home">Inicio</a>
+                <a href="#caracteristicas" class="hover:text-brand-teal transition-colors" data-es="Características" data-en="Features">Características</a>
+                <a href="#interfaz" class="hover:text-brand-teal transition-colors" data-es="Interfaz & Iconos" data-en="UI & Icons">Interfaz & Iconos</a>
+                <a href="#arquitectura" class="hover:text-brand-teal transition-colors" data-es="Arquitectura" data-en="Architecture">Arquitectura</a>
+                <a href="#privacidad" class="hover:text-brand-teal transition-colors" data-es="Privacidad" data-en="Privacy">Privacidad</a>
+                <a href="notas-de-actualizacion.html" class="px-3 py-1 bg-brand-teal/10 text-brand-teal border border-brand-teal/25 rounded-lg hover:bg-brand-teal/20 transition-colors text-xs font-bold font-mono" data-es="📢 Notas de Actualización" data-en="📢 Release Notes">📢 Notas de Actualización</a>
+                <a href="#descargar" class="hover:text-brand-teal transition-colors" data-es="Instalación" data-en="Installation">Instalación</a>
             </nav>
             
             <!-- Right Actions -->
             <div class="flex items-center gap-4">
-                <a href="https://github.com/marto-ng/Aura/raw/refs/heads/main/aura_beta.apk" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex px-5 py-2.5 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-bold rounded-full text-sm hover:opacity-90 transition-opacity hover:shadow-lg hover:shadow-cyan-500/20">
+                <!-- Language Selector Dropdown -->
+                <div class="relative inline-block text-left">
+                    <button id="lang-menu-btn" onclick="toggleLangMenu()" class="flex items-center gap-1.5 px-3 py-2 bg-slate-800/80 hover:bg-slate-800 text-slate-200 text-xs font-bold rounded-xl border border-slate-700/80 transition-colors focus:outline-none">
+                        <span id="current-lang-flag">🇪🇸</span>
+                        <span id="current-lang-text">ES</span>
+                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div id="lang-dropdown" class="hidden absolute right-0 mt-2 w-32 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl z-50 py-1 backdrop-blur-lg">
+                        <button onclick="setPageLanguage('es')" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-brand-teal/20 hover:text-brand-teal flex items-center gap-2 font-medium transition-colors">
+                            <span>🇪🇸</span> Español
+                        </button>
+                        <button onclick="setPageLanguage('en')" class="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-brand-teal/20 hover:text-brand-teal flex items-center gap-2 font-medium transition-colors">
+                            <span>🇬🇧</span> English
+                        </button>
+                    </div>
+                </div>
+
+                <a href="https://github.com/marto-ng/Aura/raw/refs/heads/main/aura_beta.apk" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex px-5 py-2.5 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-bold rounded-full text-sm hover:opacity-90 transition-opacity hover:shadow-lg hover:shadow-cyan-500/20" data-es="Instalar APK" data-en="Install APK">
                     Instalar APK
                 </a>
                 
@@ -82,15 +99,22 @@
         
         <!-- Mobile Navigation Menu -->
         <div id="mobile-menu" class="hidden md:hidden border-t border-slate-800 bg-brand-darker/95 backdrop-blur-lg px-4 pt-4 pb-6 space-y-3 transition-all duration-300">
-            <a href="#inicio" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Inicio</a>
-            <a href="notas-de-actualizacion.html" class="block py-2 px-3 rounded-xl bg-brand-teal/15 border border-brand-teal/30 text-brand-teal transition-colors font-semibold">📢 Notas de Actualización</a>
-            <a href="#caracteristicas" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Características</a>
-            <a href="#interfaz" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Documentación de Interfaz & Iconos</a>
-            <a href="#arquitectura" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Arquitectura</a>
-            <a href="#privacidad" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Política de Privacidad</a>
-            <a href="#descargar" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors">Instalación</a>
+            <div class="flex items-center justify-between py-2 px-3 bg-slate-800/40 rounded-xl border border-slate-800/80 mb-2">
+                <span class="text-xs font-medium text-slate-300" data-es="🌐 Idioma / Language" data-en="🌐 Language / Idioma">🌐 Idioma / Language</span>
+                <div class="flex items-center gap-1">
+                    <button onclick="setPageLanguage('es')" id="mobile-lang-es" class="px-2.5 py-1 text-xs font-bold rounded-lg border border-brand-teal bg-brand-teal/20 text-brand-teal">🇪🇸 ES</button>
+                    <button onclick="setPageLanguage('en')" id="mobile-lang-en" class="px-2.5 py-1 text-xs font-bold rounded-lg border border-slate-700 bg-slate-900 text-slate-400">🇬🇧 EN</button>
+                </div>
+            </div>
+            <a href="#inicio" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors" data-es="Inicio" data-en="Home">Inicio</a>
+            <a href="notas-de-actualizacion.html" class="block py-2 px-3 rounded-xl bg-brand-teal/15 border border-brand-teal/30 text-brand-teal transition-colors font-semibold" data-es="📢 Notas de Actualización" data-en="📢 Release Notes">📢 Notas de Actualización</a>
+            <a href="#caracteristicas" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors" data-es="Características" data-en="Features">Características</a>
+            <a href="#interfaz" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors" data-es="Documentación de Interfaz & Iconos" data-en="UI & Icon Documentation">Documentación de Interfaz & Iconos</a>
+            <a href="#arquitectura" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors" data-es="Arquitectura" data-en="Architecture">Arquitectura</a>
+            <a href="#privacidad" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors" data-es="Política de Privacidad" data-en="Privacy Policy">Política de Privacidad</a>
+            <a href="#descargar" class="block py-2 px-3 rounded-xl hover:bg-slate-800/60 hover:text-brand-teal text-slate-300 transition-colors" data-es="Instalación" data-en="Installation">Instalación</a>
             <div class="pt-2">
-                <a href="https://github.com/marto-ng/Aura/raw/refs/heads/main/aura_beta.apk" target="_blank" rel="noopener noreferrer" class="block w-full text-center py-3 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-bold rounded-xl text-sm">
+                <a href="https://github.com/marto-ng/Aura/raw/refs/heads/main/aura_beta.apk" target="_blank" rel="noopener noreferrer" class="block w-full text-center py-3 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-bold rounded-xl text-sm" data-es="Descargar APK" data-en="Download APK">
                     Descargar APK
                 </a>
             </div>
@@ -106,21 +130,21 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <!-- Text Column -->
             <div class="lg:col-span-7 flex flex-col justify-center text-center lg:text-left">
-                <span class="inline-flex items-center gap-2 self-center lg:self-start px-3 py-1 rounded-full text-xs font-semibold bg-brand-teal/10 text-brand-teal border border-brand-teal/20 mb-6">
-                    ⚡ Versión 3.3: Probabilidad 7D (80%-99%), Métricas Ampliadas & Gráfica 24h
+                <span class="inline-flex items-center gap-2 self-center lg:self-start px-3 py-1 rounded-full text-xs font-semibold bg-brand-teal/10 text-brand-teal border border-brand-teal/20 mb-6" data-es="⚡ Versión 3.4: Soporte Bilingüe (Español/Inglés), Modal de Ajustes & Internacionalización" data-en="⚡ Version 3.4: Bilingual Support (Spanish/English), Settings Dialog & Internationalization">
+                    ⚡ Versión 3.4: Soporte Bilingüe (Español/Inglés), Modal de Ajustes & Internacionalización
                 </span>
-                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6" data-es="El Clima en Armonía con <span class='gradient-text'>tu Ritmo</span>" data-en="Weather in Harmony with <span class='gradient-text'>your Rhythm</span>">
                     El Clima en Armonía con <span class="gradient-text">tu Ritmo</span>
                 </h1>
-                <p class="text-base sm:text-lg text-slate-300 mb-8 max-w-xl mx-auto lg:mx-0">
+                <p class="text-base sm:text-lg text-slate-300 mb-8 max-w-xl mx-auto lg:mx-0" data-es="Aura es una app de clima de última generación para Android. Minimalista, intuitiva y consciente del tiempo real. Experimenta su nuevo <strong>Tema Oscuro Elegante</strong> unificado, máxima seguridad en el resguardo de datos y rendimiento asíncrono ultra fluido." data-en="Aura is a next-generation weather app for Android. Minimalist, intuitive and real-time aware. Experience its new unified <strong>Elegant Dark Theme</strong>, maximum data privacy and ultra-smooth asynchronous performance.">
                     Aura es una app de clima de última generación para Android. Minimalista, intuitiva y consciente del tiempo real. Experimenta su nuevo <strong>Tema Oscuro Elegante</strong> unificado, máxima seguridad en el resguardo de datos y rendimiento asíncrono ultra fluido.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <a href="https://github.com/marto-ng/Aura/raw/refs/heads/main/aura_beta.apk" target="_blank" rel="noopener noreferrer" class="px-8 py-4 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-extrabold rounded-2xl shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-3 hover:translate-y-[-2px] transition-all text-sm sm:text-base">
+                    <a href="https://github.com/marto-ng/Aura/raw/refs/heads/main/aura_beta.apk" target="_blank" rel="noopener noreferrer" class="px-8 py-4 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-extrabold rounded-2xl shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-3 hover:translate-y-[-2px] transition-all text-sm sm:text-base" data-es="<svg class='w-5 h-5 sm:w-6 sm:h-6' fill='currentColor' viewBox='0 0 24 24'><path d='M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z'/></svg> Descargar APK Oficial" data-en="<svg class='w-5 h-5 sm:w-6 sm:h-6' fill='currentColor' viewBox='0 0 24 24'><path d='M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z'/></svg> Download Official APK">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
                         Descargar APK Oficial
                     </a>
-                    <a href="#caracteristicas" class="px-8 py-4 bg-slate-800/60 hover:bg-slate-800 text-slate-100 font-bold rounded-2xl border border-slate-700/60 flex items-center justify-center gap-2 transition-all text-sm sm:text-base">
+                    <a href="#caracteristicas" class="px-8 py-4 bg-slate-800/60 hover:bg-slate-800 text-slate-100 font-bold rounded-2xl border border-slate-700/60 flex items-center justify-center gap-2 transition-all text-sm sm:text-base" data-es="Explorar Funciones" data-en="Explore Features">
                         Explorar Funciones
                     </a>
                 </div>
@@ -146,15 +170,15 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <!-- Text Detail (Left) -->
                 <div class="lg:col-span-5 text-center lg:text-left">
-                    <span class="text-brand-teal text-xs font-bold uppercase tracking-widest font-mono">Simulador del Clima Exclusivo</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold mt-2 mb-4">El Nuevo Widget, <span class="gradient-text">En tu Navegador</span></h2>
-                    <p class="text-slate-300 text-sm sm:text-base mb-6 leading-relaxed">
+                    <span class="text-brand-teal text-xs font-bold uppercase tracking-widest font-mono" data-es="Simulador del Clima Exclusivo" data-en="Exclusive Weather Simulator">Simulador del Clima Exclusivo</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mt-2 mb-4" data-es="El Nuevo Widget, <span class='gradient-text'>En tu Navegador</span>" data-en="The New Widget, <span class='gradient-text'>In your Browser</span>">El Nuevo Widget, <span class="gradient-text">En tu Navegador</span></h2>
+                    <p class="text-slate-300 text-sm sm:text-base mb-6 leading-relaxed" data-es="Prueba la simulación interactiva de nuestro Widget nativo para Android. Descubre el fondo de vidrio esmerilado translúcido, las recomendaciones en rotación continua y el gráfico de líneas continuo para las próximas 24 horas. ¡Elige una ciudad y observa los cambios instantáneos!" data-en="Try the interactive simulation of our native Android Widget. Discover the translucent frosted glass background, continuously rotating recommendations, and smooth 24-hour trend line chart. Pick a city and see live updates!">
                         Prueba la simulación interactiva de nuestro Widget nativo para Android. Descubre el fondo de vidrio esmerilado translúcido, las recomendaciones en rotación continua y el gráfico de líneas continuo para las próximas 24 horas. ¡Elige una ciudad y observa los cambios instantáneos!
                     </p>
                     <div class="inline-flex flex-wrap items-center gap-3 justify-center lg:justify-start">
                         <span class="px-3 py-1 bg-slate-800/80 text-brand-teal rounded-xl border border-slate-700 text-xs font-semibold">✨ Glassmorphism</span>
-                        <span class="px-3 py-1 bg-slate-800/80 text-brand-teal rounded-xl border border-slate-700 text-xs font-semibold">📈 Tendencia 24h (Recharts)</span>
-                        <span class="px-3 py-1 bg-slate-800/80 text-brand-teal rounded-xl border border-slate-700 text-xs font-semibold">🚨 Alertas en Vivo</span>
+                        <span class="px-3 py-1 bg-slate-800/80 text-brand-teal rounded-xl border border-slate-700 text-xs font-semibold" data-es="📈 Tendencia 24h" data-en="📈 24h Trend">📈 Tendencia 24h</span>
+                        <span class="px-3 py-1 bg-slate-800/80 text-brand-teal rounded-xl border border-slate-700 text-xs font-semibold" data-es="🚨 Alertas en Vivo" data-en="🚨 Live Alerts">🚨 Alertas en Vivo</span>
                     </div>
                 </div>
 
@@ -165,7 +189,7 @@
                     
                     <!-- City Selector controls -->
                     <div class="mb-4 flex items-center gap-3 z-10 w-full max-w-sm bg-slate-900/60 p-2 rounded-2xl border border-slate-800 justify-between">
-                        <span class="text-xs font-semibold text-slate-400 pl-2">Seleccionar Ciudad Demo:</span>
+                        <span class="text-xs font-semibold text-slate-400 pl-2" data-es="Seleccionar Ciudad Demo:" data-en="Select Demo City:">Seleccionar Ciudad Demo:</span>
                         <select id="simulator-city-select" class="bg-brand-dark text-brand-teal text-xs font-bold rounded-xl px-3 py-1.5 border border-slate-700 cursor-pointer focus:outline-none focus:border-brand-teal">
                             <option value="madrid">Madrid, España 🇪🇸</option>
                             <option value="bogota">Bogotá, Colombia 🇨🇴</option>
@@ -182,7 +206,7 @@
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center gap-2">
                                 <span class="text-xs font-extrabold tracking-wider text-[#00F2FE] uppercase font-mono">AURA CLIMA</span>
-                                <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-green-500/10 text-green-400 border border-green-500/20 gap-1 animate-pulse">
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-green-500/10 text-green-400 border border-green-500/20 gap-1 animate-pulse" id="widget-sim-live-badge" data-es="<span class='w-1 h-1 rounded-full bg-green-400'></span> EN VIVO" data-en="<span class='w-1 h-1 rounded-full bg-green-400'></span> LIVE">
                                     <span class="w-1 h-1 rounded-full bg-green-400"></span> EN VIVO
                                 </span>
                             </div>
@@ -192,7 +216,7 @@
                         <!-- Extreme Alert Banner (Interactive state) -->
                         <div id="widget-sim-alert" class="hidden mb-4 p-2.5 rounded-xl border flex items-center justify-between animate-fade-in">
                             <span id="widget-sim-alert-text" class="text-xs font-bold"></span>
-                            <span class="text-[9px] bg-white/10 px-1.5 py-0.5 rounded font-mono uppercase tracking-widest font-extrabold">Alerta Activa</span>
+                            <span class="text-[9px] bg-white/10 px-1.5 py-0.5 rounded font-mono uppercase tracking-widest font-extrabold" data-es="Alerta Activa" data-en="Active Alert">Alerta Activa</span>
                         </div>
 
                         <!-- Main Row: City & State + Temp -->
@@ -736,7 +760,7 @@ com.aura
                 <!-- Direct APK Download Button -->
                 <a href="https://github.com/marto-ng/Aura/raw/refs/heads/main/aura_beta.apk" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-brand-cyan to-brand-teal text-brand-darker font-extrabold rounded-2xl shadow-xl shadow-cyan-500/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-3 text-sm sm:text-base">
                     <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-                    Descargar APK Directo (Beta v3.3)
+                    Descargar APK Directo (Beta v3.4)
                 </a>
             </div>
         </div>
@@ -869,8 +893,78 @@ com.aura
         </div>
     </footer>
 
-    <!-- Simple pure JS state manager for Hamburger Action & Interactive Widget Simulator -->
+    <!-- Simple pure JS state manager for Language Switching, Hamburger Action & Interactive Widget Simulator -->
     <script>
+        // Language Selector Logic
+        function toggleLangMenu() {
+            const dropdown = document.getElementById('lang-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        // Close lang menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const btn = document.getElementById('lang-menu-btn');
+            const dropdown = document.getElementById('lang-dropdown');
+            if (btn && dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        function setPageLanguage(lang) {
+            localStorage.setItem('aura_landing_lang', lang);
+
+            // Update UI elements with data-es / data-en attributes
+            const elements = document.querySelectorAll('[data-es][data-en]');
+            elements.forEach(el => {
+                const text = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-es');
+                if (text) {
+                    el.innerHTML = text;
+                }
+            });
+
+            // Update Language Dropdown Button Text & Flag
+            const flagEl = document.getElementById('current-lang-flag');
+            const textEl = document.getElementById('current-lang-text');
+            if (flagEl) flagEl.textContent = lang === 'en' ? '🇬🇧' : '🇪🇸';
+            if (textEl) textEl.textContent = lang === 'en' ? 'EN' : 'ES';
+
+            // Update Mobile Buttons
+            const mobileEs = document.getElementById('mobile-lang-es');
+            const mobileEn = document.getElementById('mobile-lang-en');
+            if (mobileEs && mobileEn) {
+                if (lang === 'en') {
+                    mobileEs.className = "px-2.5 py-1 text-xs font-bold rounded-lg border border-slate-700 bg-slate-900 text-slate-400";
+                    mobileEn.className = "px-2.5 py-1 text-xs font-bold rounded-lg border border-brand-teal bg-brand-teal/20 text-brand-teal";
+                } else {
+                    mobileEs.className = "px-2.5 py-1 text-xs font-bold rounded-lg border border-brand-teal bg-brand-teal/20 text-brand-teal";
+                    mobileEn.className = "px-2.5 py-1 text-xs font-bold rounded-lg border border-slate-700 bg-slate-900 text-slate-400";
+                }
+            }
+
+            // Update html lang attribute
+            document.documentElement.lang = lang;
+
+            // Update City Selector Options text
+            const citySelect = document.getElementById('simulator-city-select');
+            if (citySelect) {
+                citySelect.options[0].text = lang === 'en' ? "Madrid, Spain 🇪🇸" : "Madrid, España 🇪🇸";
+                citySelect.options[1].text = lang === 'en' ? "Bogota, Colombia 🇨🇴" : "Bogotá, Colombia 🇨🇴";
+                citySelect.options[2].text = lang === 'en' ? "Mexico City 🇲🇽" : "Ciudad de México 🇲🇽";
+                citySelect.options[3].text = lang === 'en' ? "Buenos Aires, Argentina 🇦🇷" : "Buenos Aires, Argentina 🇦🇷";
+                citySelect.options[4].text = lang === 'en' ? "Tokyo, Japan 🇯🇵" : "Tokio, Japón 🇯🇵";
+                citySelect.options[5].text = lang === 'en' ? "Paris, France 🇫🇷" : "París, Francia 🇫🇷";
+            }
+
+            // Hide dropdown
+            const dropdown = document.getElementById('lang-dropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+
+            // Refresh simulated widget
+            updateSimulatedWidget();
+        }
+
         // Hamburguer Menu logic
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -910,8 +1004,8 @@ com.aura
         // INTERACTIVE WIDGET SIMULATOR ENGINE
         // ==========================================
         
-        // Simulated City Data of temperatures, statuses, alarms and alerts
-        const cityDatabase = {
+        // Simulated City Data of temperatures, statuses, alarms and alerts (Spanish)
+        const cityDatabaseEs = {
             madrid: {
                 city: "Madrid, España 🇪🇸", temp: "36°C", status: "Despejado", rain: "0%", 
                 recom: "☀️ ¡Cielo despejado!", recomSub: "Buen clima para caminar ✨",
@@ -946,6 +1040,46 @@ com.aura
                 city: "París, Francia 🇫🇷", temp: "42°C", status: "Despejado abrasador", rain: "0%", 
                 recom: "☀️ Súper Soleado", recomSub: "Protégete de la insolación 🧢",
                 alert: { text: "🚨 Ola de calor extrema histórica: 42°C", type: "red" },
+                temps24h: [26, 28, 30, 33, 36, 39, 41, 42, 41, 39, 37, 35, 33, 31, 29, 28, 27, 26, 25, 25, 25, 26, 26, 26]
+            }
+        };
+
+        // Simulated City Data in English
+        const cityDatabaseEn = {
+            madrid: {
+                city: "Madrid, Spain 🇪🇸", temp: "36°C", status: "Clear Sky", rain: "0%", 
+                recom: "☀️ Clear sky!", recomSub: "Great weather for a walk ✨",
+                alert: { text: "⚠️ Severe heat wave, stay hydrated", type: "orange" },
+                temps24h: [20, 21, 23, 26, 29, 32, 34, 35, 36, 35, 33, 31, 29, 27, 25, 24, 23, 22, 21, 21, 20, 20, 20, 20]
+            },
+            bogota: {
+                city: "Bogota, Colombia 🇨🇴", temp: "14°C", status: "Partial rain", rain: "85%", 
+                recom: "🌧️ Rain approaching!", recomSub: "Don't forget your umbrella! ☔",
+                alert: null,
+                temps24h: [11, 11, 12, 13, 14, 14, 14, 13, 12, 12, 11, 11, 10, 10, 9, 9, 9, 9, 10, 10, 10, 10, 11, 11]
+            },
+            mexicodf: {
+                city: "Mexico City 🇲🇽", temp: "25°C", status: "Scattered clouds", rain: "40%", 
+                recom: "☁️ Clouds appearing...", recomSub: "A textured sky 🎨",
+                alert: { text: "⚠️ Very High UV Index. Use FPS 50+ sunscreen", type: "orange" },
+                temps24h: [15, 16, 18, 20, 22, 24, 25, 24, 23, 22, 20, 19, 18, 17, 16, 15, 15, 14, 14, 14, 14, 15, 15, 15]
+            },
+            buenosaires: {
+                city: "Buenos Aires, Argentina 🇦🇷", temp: "5°C", status: "Freezing drizzle", rain: "15%", 
+                recom: "❄️ Cold weather!", recomSub: "Dress warmly today 🧥",
+                alert: { text: "⚠️ Severe frost detected below zero", type: "orange" },
+                temps24h: [10, 9, 8, 8, 7, 7, 8, 9, 10, 11, 11, 11, 10, 9, 8, 7, 6, 5, 5, 5, 6, 6, 7, 8]
+            },
+            tokyo: {
+                city: "Tokyo, Japan 🇯🇵", temp: "18°C", status: "Heavy thunderstorms", rain: "95%", 
+                recom: "⚡ Severe thunderstorm", recomSub: "Stay indoors today 🏠",
+                alert: { text: "🚨 Thunderstorm with destructive hail", type: "red" },
+                temps24h: [19, 18, 18, 17, 17, 18, 19, 20, 21, 20, 19, 18, 17, 16, 16, 15, 15, 16, 16, 17, 17, 18, 18, 19]
+            },
+            paris: {
+                city: "Paris, France 🇫🇷", temp: "42°C", status: "Scorching clear", rain: "0%", 
+                recom: "☀️ Blazing Sun", recomSub: "Protect yourself from heatstroke 🧢",
+                alert: { text: "🚨 Historic extreme heat wave: 42°C", type: "red" },
                 temps24h: [26, 28, 30, 33, 36, 39, 41, 42, 41, 39, 37, 35, 33, 31, 29, 28, 27, 26, 25, 25, 25, 26, 26, 26]
             }
         };
@@ -1009,12 +1143,14 @@ com.aura
                 return `${String(hour).padStart(2, '0')}:00`;
             });
 
+            const isEn = localStorage.getItem('aura_landing_lang') === 'en';
+
             tempChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Temperatura',
+                        label: isEn ? 'Temperature' : 'Temperatura',
                         data: data24h,
                         borderColor: '#00F2FE',
                         borderWidth: 2,
@@ -1073,14 +1209,17 @@ com.aura
         // Handle Selector Change
         const citySelect = document.getElementById('simulator-city-select');
         function updateSimulatedWidget() {
+            if (!citySelect) return;
             const key = citySelect.value;
-            const data = cityDatabase[key];
+            const isEn = localStorage.getItem('aura_landing_lang') === 'en';
+            const db = isEn ? cityDatabaseEn : cityDatabaseEs;
+            const data = db[key];
             if (!data) return;
 
             document.getElementById('widget-sim-city').textContent = data.city;
             document.getElementById('widget-sim-temp').textContent = data.temp;
             document.getElementById('widget-sim-status').textContent = data.status;
-            document.getElementById('widget-sim-rain').textContent = `💧 Lluvia: ${data.rain}`;
+            document.getElementById('widget-sim-rain').textContent = isEn ? `💧 Rain: ${data.rain}` : `💧 Lluvia: ${data.rain}`;
             document.getElementById('widget-sim-recom').textContent = data.recom;
             document.getElementById('widget-sim-recom-sub').textContent = data.recomSub;
 
@@ -1103,9 +1242,10 @@ com.aura
         }
 
         citySelect.addEventListener('change', updateSimulatedWidget);
-        // Initial build
+        // Initial build & language restoration
         window.addEventListener('DOMContentLoaded', () => {
-            updateSimulatedWidget();
+            const savedLang = localStorage.getItem('aura_landing_lang') || (navigator.language.startsWith('es') ? 'es' : 'en');
+            setPageLanguage(savedLang);
         });
     </script>
 </body>

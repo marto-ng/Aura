@@ -57,13 +57,14 @@ fun TemperatureTrendChart(
     hourly: HourlyWeather,
     indices: List<Int>,
     isCelsius: Boolean,
+    isEnglish: Boolean = false,
     currentTemp: Double? = null,
     currentWeatherCode: Int? = null,
     modifier: Modifier = Modifier
 ) {
     if (indices.isEmpty()) return
 
-    val chartData = remember(hourly, indices, isCelsius, currentTemp, currentWeatherCode) {
+    val chartData = remember(hourly, indices, isCelsius, isEnglish, currentTemp, currentWeatherCode) {
         indices.mapIndexed { i, idx ->
             val rawTime = hourly.time.getOrNull(idx) ?: ""
             val rawTempC = hourly.temperature2m.getOrNull(idx) ?: 0.0
@@ -74,7 +75,7 @@ fun TemperatureTrendChart(
             val code = if (i == 0 && currentWeatherCode != null) currentWeatherCode else rawCode
             
             val hourFormatted = if (i == 0) {
-                "Ahora"
+                WeatherStrings.now(isEnglish)
             } else {
                 try {
                     val timePart = rawTime.substringAfter('T').substringBefore(':')
@@ -143,7 +144,7 @@ fun TemperatureTrendChart(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Tendencia de Temperatura (24h)",
+                        text = WeatherStrings.tempTrendTitle(isEnglish),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -151,7 +152,7 @@ fun TemperatureTrendChart(
                 }
 
                 Text(
-                    text = "👆 Arrastra para explorar",
+                    text = WeatherStrings.dragToExplore(isEnglish),
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.White.copy(alpha = 0.6f),
                     fontSize = 11.sp
@@ -202,7 +203,7 @@ fun TemperatureTrendChart(
                                     }
                                 }
                                 Text(
-                                    text = WeatherInfoHelper.getWeatherDescription(activePoint.weatherCode),
+                                    text = WeatherInfoHelper.getWeatherDescription(activePoint.weatherCode, isEnglish),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = Color.White.copy(alpha = 0.85f)
                                 )

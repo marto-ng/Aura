@@ -57,8 +57,11 @@ fun WeatherDashboardScreen(
     val searchError by viewModel.searchError.collectAsStateWithLifecycle()
     val userMessage by viewModel.userMessage.collectAsStateWithLifecycle()
     val isCelsius by viewModel.isCelsius.collectAsStateWithLifecycle()
+    val isEnglish by viewModel.isEnglish.collectAsStateWithLifecycle()
     val favorites by viewModel.favorites.collectAsStateWithLifecycle()
     val isCurrentFavorite by viewModel.isCurrentFavorite.collectAsStateWithLifecycle()
+
+    var showSettingsDialog by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
@@ -127,12 +130,14 @@ fun WeatherDashboardScreen(
     }
 
     val currentTimeState = remember { mutableStateOf("") }
-    LaunchedEffect(locationTimeZone) {
+    LaunchedEffect(locationTimeZone, isEnglish) {
         while (true) {
-            val sdf = java.text.SimpleDateFormat("EEEE, d 'de' MMMM • HH:mm", java.util.Locale("es", "ES"))
+            val pattern = if (isEnglish) "EEEE, MMMM d • HH:mm" else "EEEE, d 'de' MMMM • HH:mm"
+            val targetLocale = if (isEnglish) java.util.Locale.ENGLISH else java.util.Locale("es", "ES")
+            val sdf = java.text.SimpleDateFormat(pattern, targetLocale)
             sdf.timeZone = locationTimeZone
             val formatted = sdf.format(java.util.Date()).replaceFirstChar { 
-                if (it.isLowerCase()) it.titlecase(java.util.Locale("es", "ES")) else it.toString() 
+                if (it.isLowerCase()) it.titlecase(targetLocale) else it.toString() 
             }
             currentTimeState.value = formatted
             kotlinx.coroutines.delay(1000)
@@ -168,7 +173,7 @@ fun WeatherDashboardScreen(
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { viewModel.onSearchQueryChanged(it) },
-                    placeholder = { Text("Buscar ciudad...", color = Color.White.copy(alpha = 0.7f)) },
+                    placeholder = { Text(WeatherStrings.searchPlaceholder(isEnglish), color = Color.White.copy(alpha = 0.7f)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
@@ -240,7 +245,7 @@ fun WeatherDashboardScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.LocationOn,
-                        contentDescription = "Utilizar GPS y autoubicación"
+                        contentDescription = WeatherStrings.gpsLocateDescription(isEnglish)
                     )
                 }
             }
@@ -273,7 +278,7 @@ fun WeatherDashboardScreen(
                                         color = MaterialTheme.colorScheme.primary
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Buscando ubicaciones...", style = MaterialTheme.typography.bodyMedium)
+                                    Text(WeatherStrings.searchingLocations(isEnglish), style = MaterialTheme.typography.bodyMedium)
                                 }
                             } else if (searchError != null) {
                                 Row(
@@ -297,7 +302,7 @@ fun WeatherDashboardScreen(
                                 }
                             } else if (searchResults.isEmpty() && searchQuery.trim().length >= 3) {
                                 Text(
-                                    text = "No se encontraron ciudades con \"${searchQuery.trim()}\"",
+                                    text = WeatherStrings.noCitiesFound(searchQuery.trim(), isEnglish),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                                     modifier = Modifier.padding(12.dp)
@@ -358,7 +363,7 @@ fun WeatherDashboardScreen(
 
             // 2. Favorites Pills Horizontal Scroll Row
             Text(
-                text = "Favoritos",
+                text = WeatherStrings.favoritesLabel(isEnglish),
                 style = MaterialTheme.typography.labelLarge,
                 color = Color.White.copy(alpha = 0.85f),
                 fontWeight = FontWeight.Medium
@@ -375,7 +380,7 @@ fun WeatherDashboardScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Sin favoritos. Presiona la estrella para agregarlos.",
+                        text = WeatherStrings.noFavorites(isEnglish),
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.7f),
                         textAlign = TextAlign.Center
@@ -441,7 +446,7 @@ fun WeatherDashboardScreen(
                             CircularProgressIndicator(color = Color.White)
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                "Actualizando pronóstico...",
+                                WeatherStrings.updatingForecast(isEnglish),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = Color.White
                             )
@@ -472,7 +477,7 @@ fun WeatherDashboardScreen(
                             )
                             Spacer(modifier = Modifier.height(14.dp))
                             Text(
-                                text = "No se pudo cargar el clima",
+                                text = WeatherStrings.couldNotLoad(isEnglish),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold
@@ -496,7 +501,7 @@ fun WeatherDashboardScreen(
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Icon(Icons.Default.Refresh, contentDescription = "Retry", tint = Color.Black)
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text("Reintentar", color = Color.Black, fontWeight = FontWeight.Bold)
+                                        Text(WeatherStrings.retry(isEnglish), color = Color.Black, fontWeight = FontWeight.Bold)
                                     }
                                 }
                                 OutlinedButton(
@@ -507,7 +512,7 @@ fun WeatherDashboardScreen(
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Icon(Icons.Default.Home, contentDescription = "Default Location", tint = Color.White)
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text("Madrid", color = Color.White)
+                                        Text(WeatherStrings.defaultCityMadrid(isEnglish), color = Color.White)
                                     }
                                 }
                             }
@@ -576,7 +581,7 @@ fun WeatherDashboardScreen(
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.DateRange,
-                                            contentDescription = "Hora local de la ubicación",
+                                            contentDescription = WeatherStrings.localTimeLabel(isEnglish),
                                             tint = Color(0xFF00F2FE),
                                             modifier = Modifier.size(16.dp)
                                         )
@@ -604,7 +609,7 @@ fun WeatherDashboardScreen(
                                         )
                                     }
 
-                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Spacer(modifier = Modifier.width(4.dp))
 
                                     // C/F Toggle Switch Selector
                                     Card(
@@ -626,6 +631,21 @@ fun WeatherDashboardScreen(
                                             )
                                         }
                                     }
+
+                                    Spacer(modifier = Modifier.width(4.dp))
+
+                                    // Settings Gear Button
+                                    IconButton(
+                                        onClick = { showSettingsDialog = true },
+                                        modifier = Modifier.testTag("settings_button")
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Settings,
+                                            contentDescription = WeatherStrings.settingsTitle(isEnglish),
+                                            tint = Color.White,
+                                            modifier = Modifier.size(26.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -642,7 +662,8 @@ fun WeatherDashboardScreen(
                             uvIndex = uvIndex,
                             windSpeed = windSpeed,
                             precipProb = rainProb,
-                            code = weatherCode
+                            code = weatherCode,
+                            isEnglish = isEnglish
                         )
 
                         if (alerts.isNotEmpty()) {
@@ -666,7 +687,7 @@ fun WeatherDashboardScreen(
                                         Spacer(modifier = Modifier.width(10.dp))
                                         Column {
                                             Text(
-                                                "AVISOS IMPORTANTES METEOROLÓGICOS",
+                                                WeatherStrings.weatherAlertsHeader(isEnglish),
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = Color.White.copy(alpha = 0.8f),
                                                 fontWeight = FontWeight.ExtraBold
@@ -700,6 +721,7 @@ fun WeatherDashboardScreen(
                                     hourly = hourly,
                                     indices = indices,
                                     isCelsius = isCelsius,
+                                    isEnglish = isEnglish,
                                     currentTemp = currentTemp,
                                     currentWeatherCode = weatherCode,
                                     modifier = Modifier.padding(bottom = 16.dp)
@@ -711,13 +733,13 @@ fun WeatherDashboardScreen(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = "Pronóstico 24 Horas",
+                                        text = WeatherStrings.hourlyForecastTitle(isEnglish),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = Color.White,
                                         fontWeight = FontWeight.Bold
                                     )
                                     Text(
-                                        text = "Hora local de la ciudad",
+                                        text = WeatherStrings.localTimeLabel(isEnglish),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = Color.White.copy(alpha = 0.6f)
                                     )
@@ -757,7 +779,7 @@ fun WeatherDashboardScreen(
                                                 horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
                                                 Text(
-                                                    text = if (isCurrentHourItem) "Ahora" else formatHour(timeStr),
+                                                    text = if (isCurrentHourItem) WeatherStrings.now(isEnglish) else formatHour(timeStr),
                                                     style = MaterialTheme.typography.labelMedium,
                                                     fontWeight = if (isCurrentHourItem) FontWeight.ExtraBold else FontWeight.Medium,
                                                     color = if (isCurrentHourItem) Color(0xFF00F2FE) else Color.White.copy(alpha = 0.8f)
@@ -817,7 +839,7 @@ fun WeatherDashboardScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = "Pronóstico de 7 Días",
+                                        text = WeatherStrings.dailyForecastTitle(isEnglish),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = Color.White,
                                         fontWeight = FontWeight.Bold
@@ -828,7 +850,7 @@ fun WeatherDashboardScreen(
                                         border = BorderStroke(1.dp, Color(0xFF38BDF8).copy(alpha = 0.3f))
                                     ) {
                                         Text(
-                                            text = "$minProb% - $maxProb% prob. ocurrencia",
+                                            text = WeatherStrings.occurrenceProb(minProb, maxProb, isEnglish),
                                             style = MaterialTheme.typography.labelSmall,
                                             color = Color(0xFF38BDF8),
                                             fontWeight = FontWeight.SemiBold,
@@ -853,7 +875,8 @@ fun WeatherDashboardScreen(
                                                 tempMax = daily.temperature2mMax[i],
                                                 prob = daily.precipitationProbabilityMax.getOrNull(i) ?: 0,
                                                 occurrenceProb = occurrenceProb,
-                                                isCelsius = isCelsius
+                                                isCelsius = isCelsius,
+                                                isEnglish = isEnglish
                                             )
                                             if (i < daysCount - 1) {
                                                 HorizontalDivider(
@@ -871,7 +894,7 @@ fun WeatherDashboardScreen(
                         // Detailed Meteorological asymmetric grid
                         item {
                             Text(
-                                text = "Detalles Meteorológicos",
+                                text = WeatherStrings.meteorologicalDetailsTitle(isEnglish),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold
@@ -891,19 +914,19 @@ fun WeatherDashboardScreen(
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     // Apparent temperature Card
                                     MetricCard(
-                                        title = "Sensación Térmica",
+                                        title = WeatherStrings.feelsLike(isEnglish),
                                         value = formatTemp(feelsLike, isCelsius),
                                         icon = "🌡️",
-                                        subtitle = "Clima aparente",
+                                        subtitle = WeatherStrings.feelsLikeSubtitle(isEnglish),
                                         modifier = Modifier.weight(1f)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     // Wind Speed Card
                                     MetricCard(
-                                        title = "Viento",
+                                        title = WeatherStrings.wind(isEnglish),
                                         value = "$windSpeed km/h",
                                         icon = "💨",
-                                        subtitle = "Dir: ${windDir.toInt()}° (${getWindDirectionCardinal(windDir)})",
+                                        subtitle = WeatherStrings.windDirSubtitle(windDir, getWindDirectionCardinal(windDir, isEnglish), isEnglish),
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
@@ -911,19 +934,19 @@ fun WeatherDashboardScreen(
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     // Relative Humidity Card
                                     MetricCard(
-                                        title = "Humedad Relativa",
+                                        title = WeatherStrings.relativeHumidity(isEnglish),
                                         value = "${humidity.toInt()}%",
                                         icon = "💧",
-                                        subtitle = "Humedad del aire",
+                                        subtitle = WeatherStrings.humiditySubtitle(isEnglish),
                                         modifier = Modifier.weight(1f)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     // Precipitation probability Card
                                     MetricCard(
-                                        title = "Lluvia",
+                                        title = WeatherStrings.rain(isEnglish),
                                         value = "${rainProb}%",
                                         icon = "☔",
-                                        subtitle = "Probabilidad actual",
+                                        subtitle = WeatherStrings.currentRainProbSubtitle(isEnglish),
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
@@ -931,19 +954,19 @@ fun WeatherDashboardScreen(
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     // Current Precipitation Card
                                     MetricCard(
-                                        title = "Precipitación",
+                                        title = WeatherStrings.precipitation(isEnglish),
                                         value = "$precip mm",
                                         icon = "🌧️",
-                                        subtitle = "Acumulada esta hora",
+                                        subtitle = WeatherStrings.precipAccumulatedSubtitle(isEnglish),
                                         modifier = Modifier.weight(1f)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     // Cloud Cover Card
                                     MetricCard(
-                                        title = "Nubosidad",
+                                        title = WeatherStrings.cloudCover(isEnglish),
                                         value = "${cloudCover.toInt()}%",
                                         icon = "☁️",
-                                        subtitle = "Cobertura de nubes",
+                                        subtitle = WeatherStrings.cloudCoverSubtitle(isEnglish),
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
@@ -951,24 +974,19 @@ fun WeatherDashboardScreen(
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     // UV Index Card
                                     MetricCard(
-                                        title = "Índice UV",
+                                        title = WeatherStrings.uvIndex(isEnglish),
                                         value = "$uvIndex",
                                         icon = "☀️",
-                                        subtitle = when {
-                                            uvIndex < 3.0 -> "Bajo"
-                                            uvIndex < 6.0 -> "Moderado"
-                                            uvIndex < 8.0 -> "Alto"
-                                            else -> "Muy Alto / Extremo"
-                                        },
+                                        subtitle = WeatherStrings.uvSubtitle(uvIndex, isEnglish),
                                         modifier = Modifier.weight(1f)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     // Sunrise & Sunset Card
                                     MetricCard(
-                                        title = "Sol (Ciclo Solar)",
+                                        title = WeatherStrings.sunCycle(isEnglish),
                                         value = "☀️ $sunriseTime",
                                         icon = "🌅",
-                                        subtitle = "Atardecer: $sunsetTime",
+                                        subtitle = WeatherStrings.sunsetSubtitle(sunsetTime, isEnglish),
                                         modifier = Modifier.weight(1f)
                                     )
                                 }
@@ -992,13 +1010,13 @@ fun WeatherDashboardScreen(
                                             Row(verticalAlignment = Alignment.CenterVertically) {
                                                 Icon(
                                                     imageVector = Icons.Default.Notifications,
-                                                    contentDescription = "Notificación Diaria",
+                                                    contentDescription = WeatherStrings.morningSummaryTitle(isEnglish),
                                                     tint = Color(0xFF00F2FE),
                                                     modifier = Modifier.size(20.dp)
                                                 )
                                                 Spacer(modifier = Modifier.width(8.dp))
                                                 Text(
-                                                    text = "Resumen Matutino (WorkManager)",
+                                                    text = WeatherStrings.morningSummaryTitle(isEnglish),
                                                     style = MaterialTheme.typography.titleSmall,
                                                     color = Color.White,
                                                     fontWeight = FontWeight.Bold
@@ -1010,7 +1028,7 @@ fun WeatherDashboardScreen(
                                                 border = BorderStroke(1.dp, Color(0xFF10B981).copy(alpha = 0.4f))
                                             ) {
                                                 Text(
-                                                    text = "PROGRAMADO ⏰ 07:30 AM",
+                                                    text = WeatherStrings.scheduledLabel(isEnglish),
                                                     style = MaterialTheme.typography.labelSmall,
                                                     color = Color(0xFF34D399),
                                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -1020,7 +1038,7 @@ fun WeatherDashboardScreen(
                                         }
                                         Spacer(modifier = Modifier.height(8.dp))
                                         Text(
-                                            text = "WorkManager enviará una notificación automática cada mañana con el resumen climático de ${currentLocation.name}.",
+                                            text = WeatherStrings.workManagerDescription(currentLocation.name, isEnglish),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = Color.White.copy(alpha = 0.85f)
                                         )
@@ -1046,7 +1064,7 @@ fun WeatherDashboardScreen(
                                             )
                                             Spacer(modifier = Modifier.width(8.dp))
                                             Text(
-                                                text = if (notificationTriggered) "¡Notificación enviada en segundo plano!" else "Probar resumen matutino ahora",
+                                                text = WeatherStrings.testNotificationButton(notificationTriggered, isEnglish),
                                                 color = Color(0xFF0F172A),
                                                 fontWeight = FontWeight.Bold,
                                                 fontSize = 13.sp
@@ -1069,6 +1087,254 @@ fun WeatherDashboardScreen(
                 .padding(bottom = 16.dp)
         )
     }
+
+    if (showSettingsDialog) {
+        SettingsDialog(
+            isEnglish = isEnglish,
+            isCelsius = isCelsius,
+            onLanguageChange = { viewModel.setLanguage(it) },
+            onUnitChange = { viewModel.setTemperatureUnit(it) },
+            onDismiss = { showSettingsDialog = false }
+        )
+    }
+}
+
+@Composable
+fun SettingsDialog(
+    isEnglish: Boolean,
+    isCelsius: Boolean,
+    onLanguageChange: (Boolean) -> Unit,
+    onUnitChange: (Boolean) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = Color(0xFF0F172A).copy(alpha = 0.95f),
+        shape = RoundedCornerShape(24.dp),
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = null,
+                        tint = Color(0xFF00F2FE),
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = WeatherStrings.settingsTitle(isEnglish),
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                IconButton(onClick = onDismiss) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = WeatherStrings.close(isEnglish),
+                        tint = Color.White.copy(alpha = 0.7f)
+                    )
+                }
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                // Language Selection Section
+                Text(
+                    text = WeatherStrings.defaultLanguageTitle(isEnglish),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = WeatherStrings.defaultLanguageSubtitle(isEnglish),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.6f)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Spanish option
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onLanguageChange(false) },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (!isEnglish) Color(0xFF00F2FE).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.08f)
+                    ),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = if (!isEnglish) Color(0xFF00F2FE) else Color.White.copy(alpha = 0.15f)
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("🇪🇸", fontSize = 20.sp)
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(
+                                text = WeatherStrings.spanishOption(isEnglish),
+                                color = Color.White,
+                                fontWeight = if (!isEnglish) FontWeight.Bold else FontWeight.Medium
+                            )
+                        }
+                        RadioButton(
+                            selected = !isEnglish,
+                            onClick = { onLanguageChange(false) },
+                            colors = RadioButtonDefaults.colors(selectedColor = Color(0xFF00F2FE))
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // English option
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onLanguageChange(true) },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isEnglish) Color(0xFF00F2FE).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.08f)
+                    ),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = if (isEnglish) Color(0xFF00F2FE) else Color.White.copy(alpha = 0.15f)
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("🇬🇧", fontSize = 20.sp)
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(
+                                text = WeatherStrings.englishOption(isEnglish),
+                                color = Color.White,
+                                fontWeight = if (isEnglish) FontWeight.Bold else FontWeight.Medium
+                            )
+                        }
+                        RadioButton(
+                            selected = isEnglish,
+                            onClick = { onLanguageChange(true) },
+                            colors = RadioButtonDefaults.colors(selectedColor = Color(0xFF00F2FE))
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+                // Temperature Unit Selection Section
+                Text(
+                    text = WeatherStrings.tempUnitTitle(isEnglish),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = WeatherStrings.tempUnitSubtitle(isEnglish),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White.copy(alpha = 0.6f)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { onUnitChange(true) },
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isCelsius) Color(0xFF00F2FE).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.08f)
+                        ),
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = if (isCelsius) Color(0xFF00F2FE) else Color.White.copy(alpha = 0.15f)
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Celsius (°C)",
+                                color = Color.White,
+                                fontWeight = if (isCelsius) FontWeight.Bold else FontWeight.Medium,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+
+                    Card(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { onUnitChange(false) },
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (!isCelsius) Color(0xFF00F2FE).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.08f)
+                        ),
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = if (!isCelsius) Color(0xFF00F2FE) else Color.White.copy(alpha = 0.15f)
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Fahrenheit (°F)",
+                                color = Color.White,
+                                fontWeight = if (!isCelsius) FontWeight.Bold else FontWeight.Medium,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00F2FE)),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = WeatherStrings.close(isEnglish),
+                    color = Color(0xFF0F172A),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    )
 }
 
 // 7-day row
@@ -1080,7 +1346,8 @@ fun DailyForecastRow(
     tempMax: Double,
     prob: Int,
     occurrenceProb: Int = 90,
-    isCelsius: Boolean
+    isCelsius: Boolean,
+    isEnglish: Boolean = false
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -1089,14 +1356,14 @@ fun DailyForecastRow(
     ) {
         Column(modifier = Modifier.weight(1.2f)) {
             Text(
-                text = java_text_SimpleDateFormat_compatibility.getDayOfWeekSpanish(date),
+                text = java_text_SimpleDateFormat_compatibility.getDayOfWeek(date, isEnglish),
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
             // format date neatly with occurrence probability
             Text(
-                text = "$date • $occurrenceProb% prob.",
+                text = "$date • ${WeatherStrings.dayOccurrenceProbShort(occurrenceProb, isEnglish)}",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.White.copy(alpha = 0.6f)
             )
@@ -1363,8 +1630,9 @@ private fun formatHour(timeString: String): String {
     }
 }
 
-private fun getWindDirectionCardinal(degrees: Double): String {
-    val directions = arrayOf("N", "NE", "E", "SE", "S", "SO", "O", "NO")
+private fun getWindDirectionCardinal(degrees: Double, isEnglish: Boolean = false): String {
+    val directions = if (isEnglish) arrayOf("N", "NE", "E", "SE", "S", "SW", "W", "NW")
+                     else arrayOf("N", "NE", "E", "SE", "S", "SO", "O", "NO")
     val index = ((degrees + 22.5) % 360 / 45).toInt()
     return directions[index.coerceIn(0, 7)]
 }

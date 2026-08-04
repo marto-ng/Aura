@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+import android.content.Context
+
 sealed interface WeatherUiState {
     object Loading : WeatherUiState
     data class Success(val weather: WeatherResponse) : WeatherUiState
@@ -32,8 +34,15 @@ class WeatherViewModel(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val searchLocationsUseCase: SearchLocationsUseCase,
     private val manageFavoritesUseCase: ManageFavoritesUseCase,
-    private val getGpsLocationUseCase: GetGpsLocationUseCase
+    private val getGpsLocationUseCase: GetGpsLocationUseCase,
+    private val context: Context
 ) : ViewModel() {
+
+    private val prefs = context.getSharedPreferences("aura_settings_prefs", Context.MODE_PRIVATE)
+
+    // Default language preference: false for Spanish, true for English
+    private val _isEnglish = MutableStateFlow(prefs.getBoolean("is_english", false))
+    val isEnglish: StateFlow<Boolean> = _isEnglish.asStateFlow()
 
     // Current viewed location (Defaults to Madrid, Spain)
     private val _currentLocation = MutableStateFlow(LocationDomainModel.DEFAULT)
@@ -62,7 +71,7 @@ class WeatherViewModel(
     val userMessage: StateFlow<String?> = _userMessage.asStateFlow()
 
     // Temperature unit: true for Celsius, false for Fahrenheit
-    private val _isCelsius = MutableStateFlow(true)
+    private val _isCelsius = MutableStateFlow(prefs.getBoolean("is_celsius", true))
     val isCelsius: StateFlow<Boolean> = _isCelsius.asStateFlow()
 
     // List of favorite locations
@@ -86,6 +95,21 @@ class WeatherViewModel(
 
     init {
         fetchWeatherForCurrentLocation()
+    }
+
+    fun setLanguage(isEng: Boolean) {
+        if (_isEnglish.value != isEng) {
+            _isEnglish.value = isEng
+            prefs.edit().putBoolean("is_english", isEng).apply()
+            _userMessage.value = WeatherStrings.languageChangedMessage(isEng)
+        }
+    }
+
+    fun setTemperatureUnit(celsius: Boolean) {
+        if (_isCelsius.value != celsius) {
+            _isCelsius.value = celsius
+            prefs.edit().putBoolean("is_celsius", celsius).apply()
+        }
     }
 
     fun clearUserMessage() {
@@ -127,7 +151,7 @@ class WeatherViewModel(
                 }
                 .onFailure { error ->
                     _weatherState.value = WeatherUiState.Error(
-                        error.message ?: "Error al obtener la información meteorológica."
+                        error.message ?: WeatherStrings.couldNotLoad(_isEnglish.value)
                     )
                 }
         }
@@ -154,7 +178,7 @@ class WeatherViewModel(
                 _searchError.value = null
             }.onFailure { error ->
                 _searchResults.value = emptyList()
-                _searchError.value = error.message ?: "Error al buscar ubicaciones."
+                _searchError.value = error.message ?: WeatherStrings.searchError(_isEnglish.value)
             }
             _isSearching.value = false
         }
@@ -167,18 +191,18 @@ class WeatherViewModel(
                 val currentlyFav = isCurrentFavorite.value
                 manageFavoritesUseCase.toggleFavorite(loc, currentlyFav)
                 _userMessage.value = if (currentlyFav) {
-                    "${loc.name} eliminada de favoritos"
+                    WeatherStrings.favoriteRemoved(loc.name, _isEnglish.value)
                 } else {
-                    "⭐ ${loc.name} guardada en favoritos"
+                    WeatherStrings.favoriteAdded(loc.name, _isEnglish.value)
                 }
             } catch (e: Exception) {
-                _userMessage.value = "Error al actualizar favoritos: ${e.localizedMessage}"
+                _userMessage.value = "Error: ${e.localizedMessage}"
             }
         }
     }
 
     fun toggleTemperatureUnit() {
-        _isCelsius.value = !_isCelsius.value
+        setTemperatureUnit(!_isCelsius.value)
     }
 
     fun loadWeatherFromGps() {
@@ -188,14 +212,14 @@ class WeatherViewModel(
                 val gpsLocation = getGpsLocationUseCase()
                 if (gpsLocation != null) {
                     _currentLocation.value = gpsLocation
-                    _userMessage.value = "📍 Ubicación actualizada: ${gpsLocation.name}"
+                    _userMessage.value = WeatherStrings.gpsUpdated(gpsLocation.name, _isEnglish.value)
                     fetchWeatherForCurrentLocation()
                 } else {
-                    _userMessage.value = "Ubicación GPS no disponible. Mostrando ciudad predeterminada."
+                    _userMessage.value = WeatherStrings.gpsUnavailable(_isEnglish.value)
                     fetchWeatherForCurrentLocation()
                 }
             } catch (e: Exception) {
-                _userMessage.value = "Error al obtener la ubicación GPS."
+                _userMessage.value = WeatherStrings.gpsError(_isEnglish.value)
                 fetchWeatherForCurrentLocation()
             }
         }
@@ -220,7 +244,8 @@ class WeatherViewModel(
                         getWeatherUseCase = appContainer.getWeatherUseCase,
                         searchLocationsUseCase = appContainer.searchLocationsUseCase,
                         manageFavoritesUseCase = appContainer.manageFavoritesUseCase,
-                        getGpsLocationUseCase = appContainer.getGpsLocationUseCase
+                        getGpsLocationUseCase = appContainer.getGpsLocationUseCase,
+                        context = appContainer.context
                     ) as T
                 }
             }

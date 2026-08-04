@@ -14,7 +14,7 @@ import com.aura.domain.usecase.SearchLocationsUseCase
  * Dependency Injection Container for Clean Architecture layer provision.
  * Maintains singleton instances across the application lifecycle.
  */
-class AppContainer(private val context: Context) {
+class AppContainer(val context: Context) {
 
     private val database: ClimaDatabase by lazy {
         ClimaDatabase.getDatabase(context)

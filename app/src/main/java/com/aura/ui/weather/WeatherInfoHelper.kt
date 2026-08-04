@@ -5,37 +5,71 @@ import androidx.compose.ui.graphics.Brush
 
 object WeatherInfoHelper {
 
-    fun getWeatherDescription(code: Int): String {
-        return when (code) {
-            0 -> "Cielo Despejado"
-            1 -> "Principalmente Despejado"
-            2 -> "Parcialmente Nublado"
-            3 -> "Cubierto / Nublado"
-            45 -> "Niebla"
-            48 -> "Niebla Escarchada"
-            51 -> "Llovizna Ligera"
-            53 -> "Llovizna Moderada"
-            55 -> "Llovizna Intensa"
-            56 -> "Llovizna Helada Ligera"
-            57 -> "Llovizna Helada Densa"
-            61 -> "Lluvia Débil"
-            63 -> "Lluvia Moderada"
-            65 -> "Lluvia Fuerte"
-            66 -> "Lluvia Helada Ligera"
-            67 -> "Lluvia Helada Fuerte"
-            71 -> "Nevada Ligera"
-            73 -> "Nevada Moderada"
-            75 -> "Nevada Intensa"
-            77 -> "Granos de Nieve"
-            80 -> "Chubascos de Lluvia Débiles"
-            81 -> "Chubascos de Lluvia Moderados"
-            82 -> "Chubascos de Lluvia Violentos"
-            85 -> "Chubascos de Nieve Débiles"
-            86 -> "Chubascos de Nieve Fuertes"
-            95 -> "Tormenta Eléctrica"
-            96 -> "Tormenta con Granizo Ligero"
-            99 -> "Tormenta con Granizo Fuerte"
-            else -> "Condiciones Variables"
+    fun getWeatherDescription(code: Int, isEnglish: Boolean = false): String {
+        return if (isEnglish) {
+            when (code) {
+                0 -> "Clear Sky"
+                1 -> "Mainly Clear"
+                2 -> "Partly Cloudy"
+                3 -> "Overcast"
+                45 -> "Fog"
+                48 -> "Freezing Fog"
+                51 -> "Light Drizzle"
+                53 -> "Moderate Drizzle"
+                55 -> "Dense Drizzle"
+                56 -> "Light Freezing Drizzle"
+                57 -> "Dense Freezing Drizzle"
+                61 -> "Light Rain"
+                63 -> "Moderate Rain"
+                65 -> "Heavy Rain"
+                66 -> "Light Freezing Rain"
+                67 -> "Heavy Freezing Rain"
+                71 -> "Slight Snow Fall"
+                73 -> "Moderate Snow Fall"
+                75 -> "Heavy Snow Fall"
+                77 -> "Snow Grains"
+                80 -> "Slight Rain Showers"
+                81 -> "Moderate Rain Showers"
+                82 -> "Violent Rain Showers"
+                85 -> "Slight Snow Showers"
+                86 -> "Heavy Snow Showers"
+                95 -> "Thunderstorm"
+                96 -> "Thunderstorm with Light Hail"
+                99 -> "Thunderstorm with Heavy Hail"
+                else -> "Variable Conditions"
+            }
+        } else {
+            when (code) {
+                0 -> "Cielo Despejado"
+                1 -> "Principalmente Despejado"
+                2 -> "Parcialmente Nublado"
+                3 -> "Cubierto / Nublado"
+                45 -> "Niebla"
+                48 -> "Niebla Escarchada"
+                51 -> "Llovizna Ligera"
+                53 -> "Llovizna Moderada"
+                55 -> "Llovizna Intensa"
+                56 -> "Llovizna Helada Ligera"
+                57 -> "Llovizna Helada Densa"
+                61 -> "Lluvia Débil"
+                63 -> "Lluvia Moderada"
+                65 -> "Lluvia Fuerte"
+                66 -> "Lluvia Helada Ligera"
+                67 -> "Lluvia Helada Fuerte"
+                71 -> "Nevada Ligera"
+                73 -> "Nevada Moderada"
+                75 -> "Nevada Intensa"
+                77 -> "Granos de Nieve"
+                80 -> "Chubascos de Lluvia Débiles"
+                81 -> "Chubascos de Lluvia Moderados"
+                82 -> "Chubascos de Lluvia Violentos"
+                85 -> "Chubascos de Nieve Débiles"
+                86 -> "Chubascos de Nieve Fuertes"
+                95 -> "Tormenta Eléctrica"
+                96 -> "Tormenta con Granizo Ligero"
+                99 -> "Tormenta con Granizo Fuerte"
+                else -> "Condiciones Variables"
+            }
         }
     }
 
@@ -67,43 +101,91 @@ object WeatherInfoHelper {
     }
 
     // Identify if there is an extreme alert
-    fun getExtremeAlerts(temp: Double, uvIndex: Double, windSpeed: Double, precipProb: Int, code: Int): List<String> {
+    fun getExtremeAlerts(
+        temp: Double,
+        uvIndex: Double,
+        windSpeed: Double,
+        precipProb: Int,
+        code: Int,
+        isEnglish: Boolean = false
+    ): List<String> {
         val alerts = mutableListOf<String>()
-        if (temp >= 35.0) {
-            alerts.add("Calor Extremo: Temperatura superior a 35°C. Mantente hidratado y evita el sol directo.")
-        }
-        if (temp <= 0.0) {
-            alerts.add("Frío Extremo: Riesgo de heladas importantes. Abrigarse adecuadamente.")
-        }
-        if (uvIndex >= 7.0) {
-            alerts.add("UV Extremo (Índice $uvIndex): Radiación muy alta. Aplica protector solar FPS 50+.")
-        }
-        if (windSpeed >= 40.0) {
-            alerts.add("Vientos Fuertes ($windSpeed km/h): Alerta de ráfagas importantes. Precaución al aire libre.")
-        }
-        if (code in listOf(95, 96, 99)) {
-            alerts.add("Tormenta Eléctrica Detectada: Busca refugio seguro e interior, peligro de rayos.")
-        } else if (code in listOf(65, 82)) {
-            alerts.add("Precipitación Severa: Riesgo Screen por fuertes lluvias acumuladas.")
+        if (isEnglish) {
+            if (temp >= 35.0) {
+                alerts.add("Extreme Heat: Temperature above 35°C. Stay hydrated and avoid direct sunlight.")
+            }
+            if (temp <= 0.0) {
+                alerts.add("Extreme Cold: High frost risk. Dress warmly.")
+            }
+            if (uvIndex >= 7.0) {
+                alerts.add("Extreme UV (Index $uvIndex): Very high radiation. Apply FPS 50+ sunscreen.")
+            }
+            if (windSpeed >= 40.0) {
+                alerts.add("Strong Winds ($windSpeed km/h): High gust warning. Use caution outdoors.")
+            }
+            if (code in listOf(95, 96, 99)) {
+                alerts.add("Thunderstorm Detected: Seek safe indoor shelter, lightning hazard.")
+            } else if (code in listOf(65, 82)) {
+                alerts.add("Severe Precipitation: High risk of heavy rain accumulation.")
+            }
+        } else {
+            if (temp >= 35.0) {
+                alerts.add("Calor Extremo: Temperatura superior a 35°C. Mantente hidratado y evita el sol directo.")
+            }
+            if (temp <= 0.0) {
+                alerts.add("Frío Extremo: Riesgo de heladas importantes. Abrigarse adecuadamente.")
+            }
+            if (uvIndex >= 7.0) {
+                alerts.add("UV Extremo (Índice $uvIndex): Radiación muy alta. Aplica protector solar FPS 50+.")
+            }
+            if (windSpeed >= 40.0) {
+                alerts.add("Vientos Fuertes ($windSpeed km/h): Alerta de ráfagas importantes. Precaución al aire libre.")
+            }
+            if (code in listOf(95, 96, 99)) {
+                alerts.add("Tormenta Eléctrica Detectada: Busca refugio seguro e interior, peligro de rayos.")
+            } else if (code in listOf(65, 82)) {
+                alerts.add("Precipitación Severa: Riesgo por fuertes lluvias acumuladas.")
+            }
         }
         return alerts
     }
 
-    fun getWidgetAlert(temp: Double, uvIndex: Double, windSpeed: Double, code: Int): Pair<String, Boolean>? {
-        // Red alerts (extreme priority warning)
-        if (temp >= 40.0) return Pair("🚨 Ola calor extrema: ${temp.toInt()}°C", true)
-        if (temp <= -5.0) return Pair("🚨 Ola de frío extremo: ${temp.toInt()}°C", true)
-        if (code == 99) return Pair("🚨 Tormenta con granizo destructivo", true)
-        if (windSpeed >= 60.0) return Pair("⚠️ Viento destructivo: ${windSpeed.toInt()}km/h", true)
-        if (uvIndex >= 10.0) return Pair("⚠️ Radiación UV extrema de $uvIndex", true)
+    fun getWidgetAlert(
+        temp: Double,
+        uvIndex: Double,
+        windSpeed: Double,
+        code: Int,
+        isEnglish: Boolean = false
+    ): Pair<String, Boolean>? {
+        if (isEnglish) {
+            if (temp >= 40.0) return Pair("🚨 Extreme Heatwave: ${temp.toInt()}°C", true)
+            if (temp <= -5.0) return Pair("🚨 Extreme Coldwave: ${temp.toInt()}°C", true)
+            if (code == 99) return Pair("🚨 Destructive Hailstorm Alert", true)
+            if (windSpeed >= 60.0) return Pair("⚠️ Destructive Wind: ${windSpeed.toInt()}km/h", true)
+            if (uvIndex >= 10.0) return Pair("⚠️ Extreme UV Radiation $uvIndex", true)
 
-        // Orange alerts (severe warning)
-        if (temp >= 35.0) return Pair("⚠️ Calor severo, mantente hidratado", false)
-        if (temp <= 0.0) return Pair("⚠️ Helada severa detectada: ${temp.toInt()}°C", false)
-        if (code in listOf(95, 96)) return Pair("⚡ Peligro de tormentas eléctricas", false)
-        if (code in listOf(65, 82)) return Pair("🌧️ Precipitación torrencial intensa", false)
-        if (windSpeed >= 40.0) return Pair("🌬️ Ráfagas fuertes: ${windSpeed.toInt()} km/h", false)
-        if (uvIndex >= 7.0) return Pair("☀️ UV Muy alto. Usa protector FPS 50+", false)
+            if (temp >= 35.0) return Pair("⚠️ Severe Heat, stay hydrated", false)
+            if (temp <= 0.0) return Pair("⚠️ Severe Frost Detected: ${temp.toInt()}°C", false)
+            if (code in listOf(95, 96)) return Pair("⚡ Danger of Thunderstorms", false)
+            if (code in listOf(65, 82)) return Pair("🌧️ Torrential Heavy Rainfall", false)
+            if (windSpeed >= 40.0) return Pair("🌬️ Strong Gusts: ${windSpeed.toInt()} km/h", false)
+            if (uvIndex >= 7.0) return Pair("☀️ Very High UV. Use sunscreen SPF 50+", false)
+        } else {
+            // Red alerts (extreme priority warning)
+            if (temp >= 40.0) return Pair("🚨 Ola calor extrema: ${temp.toInt()}°C", true)
+            if (temp <= -5.0) return Pair("🚨 Ola de frío extremo: ${temp.toInt()}°C", true)
+            if (code == 99) return Pair("🚨 Tormenta con granizo destructivo", true)
+            if (windSpeed >= 60.0) return Pair("⚠️ Viento destructivo: ${windSpeed.toInt()}km/h", true)
+            if (uvIndex >= 10.0) return Pair("⚠️ Radiación UV extrema de $uvIndex", true)
+
+            // Orange alerts (severe warning)
+            if (temp >= 35.0) return Pair("⚠️ Calor severo, mantente hidratado", false)
+            if (temp <= 0.0) return Pair("⚠️ Helada severa detectada: ${temp.toInt()}°C", false)
+            if (code in listOf(95, 96)) return Pair("⚡ Peligro de tormentas eléctricas", false)
+            if (code in listOf(65, 82)) return Pair("🌧️ Precipitación torrencial intensa", false)
+            if (windSpeed >= 40.0) return Pair("🌬️ Ráfagas fuertes: ${windSpeed.toInt()} km/h", false)
+            if (uvIndex >= 7.0) return Pair("☀️ UV Muy alto. Usa protector FPS 50+", false)
+        }
 
         return null
     }
