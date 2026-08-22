@@ -237,4 +237,27 @@ gradle :app:verifyRoborazziDebug
 
 ---
 
+## 📄 Licencia
+
+Este proyecto está distribuido bajo los términos de la **Licencia Pública General de GNU (GNU General Public License v3.0 - GPLv3)**.
+
+```text
+Aura Clima - Aplicación Inteligente y Adaptativa del Clima para Android
+Copyright (C) 2026 Aura Clima Contributors
+
+Este programa es software libre: puedes redistribuirlo y/o modificarlo
+bajo los términos de la Licencia Pública General GNU publicada por
+la Free Software Foundation, ya sea la versión 3 de la Licencia, o
+(a tu elección) cualquier versión posterior.
+
+Este programa se distribuye con la esperanza de que sea útil,
+pero SIN NINGUNA GARANTÍA; ni siquiera la garantía implícita de
+COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR. Consulta la
+Licencia Pública General GNU para obtener más detalles.
+```
+
+Consulta el archivo [LICENSE](LICENSE) para conocer el texto íntegro de la licencia.
+
+---
+
 Desarrollado con pasión, buscando siempre la fusión idónea entre **ingeniería limpia** y **diseño elegante**. ¡Disfruta el cielo despejado o las noches estrelladas con **Aura**! 🌤️🌌
